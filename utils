@@ -1,0 +1,16 @@
+
+
+Google: Match-O File Format
+https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/MachORuntime/Reference/reference.html
+
+https://lowlevelbits.org/parsing-mach-o-files/
+https://github.com/aidansteele/osx-abi-macho-file-format-reference
+
+Google: MachOView
+https://sourceforge.net/projects/machoview
+
+Google: Mach-O
+https://en.wikipedia.org/wiki/Mach-O
+
+/usr/include/mach-o/loader.h
+/usr/include/mach-o/nlist.h
