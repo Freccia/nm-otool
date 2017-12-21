@@ -1,2 +1,2 @@
-# nm_otool
+# nm-otool
 nm + otool
