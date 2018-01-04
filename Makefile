@@ -5,72 +5,86 @@
 #                                                     +:+ +:+         +:+      #
 #    By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2017/12/04 21:18:10 by lfabbro           #+#    #+#              #
-#    Updated: 2017/12/21 20:58:58 by lfabbro          ###   ########.fr        #
+#    Created: 2018/01/04 15:18:12 by lfabbro           #+#    #+#              #
+#    Updated: 2018/01/04 16:17:24 by lfabbro          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FT_NM		= ft_nm 
+FT_NM		= ft_nm
 FT_OTOOL	= ft_otool
 
-CC			= gcc
+NAME		= $(FT_NM) $(FT_OTOOL)
+
+SRC_NM		= ft_nm.c
+SRC_OT		= ft_otool.c
+
+SRC_DIR		= src
+OBJ_DIR		= obj
+INC_DIR		= include libft/include libft/libft
+LIB_DIR		= libft
+
+CC			= clang
 CFLAGS		= -Wall -Wextra -Werror
+INC			= $(addprefix -I./,$(INC_DIR))
+LIB			= $(addprefix -L./,$(LIB_DIR))
+LIB			+= -lft
 
-SRC_NAME	= ft_nm.c
-OBJ_NAME	= $(SRC_FT_NM:.c=.o)
-LIB_NAME	= -lft
+SRC_DIR_NM	= $(addprefix $(SRC_DIR)/,$(FT_NM))
+SRC_DIR_OT	= $(addprefix $(SRC_DIR)/,$(FT_OTOOL))
+OBJ_DIR_NM	= $(addprefix $(OBJ_DIR)/,$(FT_NM))
+OBJ_DIR_OT	= $(addprefix $(OBJ_DIR)/,$(FT_OTOOL))
 
-SRC_PATH	= ./src/
-OBJ_PATH	= ./obj/
-LIB_PATH	= ./libft/ .
-INC_PATH	= ./include ./libft/include ./libft/libft
-
-SRC			= $(addprefix $(SRC_PATH),$(SRC_NAME))
-OBJ			= $(SRC:%.c=%.o)
-LIB 		= $(addprefix -L, $(LIB_PATH))
-LIB			+= $(LIB_NAME)
-INC 		= $(addprefix -I ,$(INC_PATH))
+SRC_FILES_NM	= $(addprefix $(SRC_DIR_NM)/,$(SRC_NM))
+SRC_FILES_OT	= $(addprefix $(SRC_DIR_OT)/,$(SRC_OT))
+OBJ_FILES_NM	= $(patsubst $(SRC_DIR_NM)/%.c,$(OBJ_DIR_NM)/%.o,$(SRC_FILES_NM))
+OBJ_FILES_OT	= $(patsubst $(SRC_DIR_OT)/%.c,$(OBJ_DIR_OT)/%.o,$(SRC_FILES_OT))
 
 RED			= \033[0;31m
 GREEN		= \033[0;32m
+YELLOW		= \033[0;33m
 WHITE		= \033[1;37m
 ENDC		= \033[0m
 
-.PHONY: all clean fclean re lib libclean libfclean norme
+.PHONY:	all directories clean fclean re lib libclean libre norme
 
-all: lib $(FT_NM) $(FT_OTOOL)
+all: directories $(FT_NM) $(FT_OTOOL)
 
-$(FT_NM): $(OBJ)
-	@printf "$(WHITE) Making $(FT_NM) $(ENDC)\n"
-	$(CC) $(CFLAGS) $(INC) $(OBJ) -o $(FT_NM) $(LIB)
+$(FT_NM): $(OBJ_FILES_NM)
+	$(CC) $(CFLAGS) $(INC) $^ -o $@ $(LIB)
 	@printf "$(WHITE) [ $(GREEN)OK $(WHITE)] $(FT_NM) $(ENDC)\n"
 
-$(FT_OTOOL):
-	@printf "$(WHITE) Making $(FT_OTOOL) $(ENDC)\n"
-#	$(CC) $(CFLAGS) $(INC) $(FT_NM)
+$(FT_OTOOL): $(OBJ_FILES_OT)
+	$(CC) $(CFLAGS) $(INC) $^ -o $@ $(LIB)
 	@printf "$(WHITE) [ $(GREEN)OK $(WHITE)] $(FT_OTOOL) $(ENDC)\n"
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
+$(OBJ_DIR_NM)/%.o: $(SRC_DIR_NM)/%.c
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(OBJ_DIR_OT)/%.o: $(SRC_DIR_OT)/%.c
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+directories:
+	@mkdir -p $(OBJ_DIR) $(OBJ_DIR_NM) $(OBJ_DIR_OT)
 
 clean:
-	@rm -vrf $(OBJ) $(OBJ_PATH) $(SRC_PATH)/*.o
+	@printf "$(WHITE) [ $()CLEAN $(WHITE)]$(ENDC)\n"
+	@rm -fvr $(OBJ_DIR)
 
-fclean: clean libfclean
-	@rm -fv $(FT_NM) $(FT_OTOOL)
+fclean: clean
 	@printf "$(WHITE) [ $(RED)FCLEAN $(WHITE)]$(ENDC)\n"
-
-lib:
-	@make -C ./libft
-
-libclean:
-	@make -C ./libft clean
-
-libfclean:
-	@make -C ./libft fclean
+	@rm -fv $(FT_NM) $(FT_OTOOL)
 
 re: fclean all
 
+lib:
+	@make -C $(LIB_DIR)
+
+libclean:
+	@make -C $(LIB_DIR) clean
+
+libre:
+	@make -C $(LIB_DIR) re
+
 norme :
 	@printf "$(WHITE) Norminette $(ENDC)\n"
-	norminette **/*.[ch]
+	norminette $(SRC_DIR)/**/*.[ch] $(INC_DIR)/*.[ch] $(LIB_DIR)/**/*.[ch]
