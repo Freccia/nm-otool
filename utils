@@ -29,3 +29,6 @@ n_type VALUES:
 0xc    0000	1100  PBUP  (prebound undef, def in a dlyb)
 0xa    0000 1010  INDR  (indirect)
 
+http://www2.phys.canterbury.ac.nz/dept/docs/manuals/unix/DEC_4.0e_Docs/HTML/MAN/MAN4/0179____.HTM
+https://developer.apple.com/documentation/kernel/nlist_64
+https://www.geeksforgeeks.org/insertion-sort-for-singly-linked-list/
