@@ -1,9 +1,9 @@
 # Prerequisites
 *.d
 
-ft_nm
-ft_otool
 obj
+._*
+.DS*
 
 # Vim Swap Files
 .*.sw*
