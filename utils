@@ -14,3 +14,18 @@ https://en.wikipedia.org/wiki/Mach-O
 
 /usr/include/mach-o/loader.h
 /usr/include/mach-o/nlist.h
+
+
+n_type MASKS:
+0xe0   1110 0000  N_STAB
+0x10   0001 0000  N_PEXT
+0x0e   0000 1110  N_TYPE
+0x01   0000 0001  N_EXT
+
+n_type VALUES:
+0x0    0000 0000  UNDEF (undefined n_sect->NO_SECT)
+0x2    0000 0010  ABS   (absolute n_sect->NO_SECT)
+0xe    0000 1110  SECT  (section number n_sect)
+0xc    0000	1100  PBUP  (prebound undef, def in a dlyb)
+0xa    0000 1010  INDR  (indirect)
+
