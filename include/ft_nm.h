@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/06 19:09:30 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/06 22:13:38 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@
 #include <sys/stat.h>
 
 typedef struct s_strtab		t_strtab;
+
+struct s_sections
+{
+	uint16_t		sct_text;
+	uint16_t		sct_data;
+	uint16_t		sct_
+};
 
 struct s_strtab
 {
