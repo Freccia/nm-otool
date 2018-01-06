@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/05 14:45:21 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/06 19:09:30 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,18 @@ typedef struct s_strtab		t_strtab;
 struct s_strtab
 {
 	t_strtab		*next;
-	char			*symbol;
+	char			*strx;
 	uint8_t			type;
+	uint16_t		sect;
+	uint16_t		desc;
 	uint64_t		value;
 };
 
 int			handle_64(void *ptr);
 int			handle_32(void *ptr);
+
+int			list_push(t_strtab **slist, struct nlist_64 symtab, char *strtab);
+void		insertion_sort(t_strtab **slist);
 
 int			error(char *str);
 

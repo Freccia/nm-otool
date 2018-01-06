@@ -6,84 +6,46 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:40:37 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/05 18:52:49 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/06 20:12:22 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
-
-t_strtab	*new_link(t_strtab *next, char *str, uint8_t n_type, uint64_t n_value)
-{
-	t_strtab	*new;
-
-	if ((new = malloc(sizeof(t_strtab))) == NULL)
-		return (NULL);
-	new->next = next;
-	new->symbol = ft_strdup(str);
-	new->type = n_type;
-	new->value = n_value;
-	return (new);
-}
-
-int			quicksort_slist(t_strtab **slist)
-{
-	t_strtab	*ptr;
-	t_strtab	*tmp;
-
-	ptr = *slist;
-	while (ptr)
-	{
-		ptr2 = *slist
-		while (ptr2)
-		{
-
-		}
-	}
-}
-
-int			insert_in_list(t_strtab **slist, char *strx, uint8_t n_type, uint64_t n_value)
-{
-	t_strtab	*new;
-	t_strtab	*tmp;
-
-	tmp = *slist;
-	if ((new = new_link(NULL, strx, n_type, n_value)) == NULL)
-		return (EXIT_FAILURE);
-	if (tmp == NULL)
-	{
-		*slist = new;
-		free(tmp);
-		return (EXIT_SUCCESS);
-	}
-	*slist = new;
-	new->next = tmp;
-	return (EXIT_SUCCESS);
-}
 
 //char		symbolic_debugging_entry(uint8_t n_type)
 //{
 //
 //}
 
-char		get_symbol_type(uint8_t n_type)
+char		get_symbol_type(uint8_t n_type, uint16_t n_sect)
 {
-	if (n_type & N_STAB)
-		return ('S');
+	char	ret;
+
+	ret = '-';
+//	if (n_type & N_STAB)
+//		return ('S');
 //		return (symbolic_debugging_entry(n_type));
 	if ((n_type & N_TYPE) == N_UNDF)
-		return ('U');
+		ret = 'U';
 	if ((n_type & N_TYPE) == N_ABS)
-		return ('A');
+		ret = 'A';
 	if ((n_type & N_TYPE) == N_SECT)
-		return ('T');
+	{
+		if (n_sect & 0x4)
+			ret = 'S';
+		if (n_type & N_EXT)
+			ret = 'T';
+	}
 		//return ('D');
 		//return ('B');
 	if ((n_type & N_TYPE) == N_PBUD)
-		return ('C');
+		ret = 'C';
 		//return ('S');
 	if ((n_type & N_TYPE) == N_INDR)
-		return ('I');
-	return ('U');
+		ret = 'I';
+	if (n_type & N_PEXT || !(n_type & N_EXT))
+		ret = ft_tolower(ret);
+	return (ret);
 }
 
 void		print_list(t_strtab *slist)
@@ -97,62 +59,60 @@ void		print_list(t_strtab *slist)
 	addr[16] = 0;
 	while (ptr)
 	{
-		type = get_symbol_type(ptr->type);
+		type = get_symbol_type(ptr->type, ptr->sect);
 		if (ptr->value)
-			ft_printf("%016lx %c %s\n", ptr->value, type, ptr->symbol);
+			//ft_printf("%016lx %c %s\n", ptr->value, type, ptr->strx);
+			ft_printf("%016lx %c %s --- %x - %x - %p - %x\n", ptr->value, type, ptr->strx, ptr->type, ptr->value, ptr->desc, ptr->sect);
 		else
-			ft_printf("%s %c %s\n", addr, type, ptr->symbol);
+			//ft_printf("%16c %c %s\n", ' ', type, ptr->strx);
+			ft_printf("%16c %c %s --- %x - %x - %p - %x\n", ' ', type, ptr->strx, ptr->type, ptr->value, ptr->desc, ptr->sect);
 		ptr = ptr->next;
 	}
 }
 
-int			output_64(int nsyms, int symoff, int stroff, char *ptr, t_strtab *slist)
+int			output_64(struct symtab_command *symc, char *ptr)
 {
-	int				i;
-	char			*strtable;
+	t_strtab		*slist;
 	struct nlist_64	*symtab;
+	char			*strtab;
+	int				i;
 
-	symtab = (struct nlist_64*)((char*)ptr + symoff);
-	strtable = (char*)ptr + stroff;
+	symtab = (struct nlist_64 *)((char*)ptr + symc->symoff);
+	strtab = (char *)ptr + symc->stroff;
 	i = 0;
-	while (i < nsyms)
+	while (i < (int)symc->nsyms)
 	{
 		// TODO TEST IF n_strx is 0 -> null
-		//ft_printf("%s\n", strtable + symtab[i].n_un.n_strx);
-		//if (ft_strncmp(strtable + symtab[i].n_un.n_strx, "radr://", 7))
-		if (insert_in_list(&slist, strtable + symtab[i].n_un.n_strx, symtab[i].n_type, symtab[i].n_value) == EXIT_FAILURE)
+		//ft_printf("%s\n", strtab + symtab[i].n_un.n_strx);
+		if (list_push(&slist, symtab[i], strtab) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 		++i;
 	}
+	insertion_sort(&slist);
 	print_list(slist);
 	return (EXIT_SUCCESS);
 }
 
 int			handle_64(void *ptr)
 {
-	t_strtab				*slist;
 	struct mach_header_64	*header;
 	struct load_command		*lc;
-	struct symtab_command	*sym;
-	uint32_t				ncmds;
+	struct symtab_command	*symc;
 	uint32_t				i;
 
-	slist = NULL;
-	header = (struct mach_header_64 *) ptr;
-	ncmds = header->ncmds;
+	header = (struct mach_header_64 *)ptr;
 	lc = ptr + sizeof(*header);
 	i = 0;
-	while (i < ncmds)
+	while (i < header->ncmds)
 	{
 		if (lc->cmd == LC_SYMTAB)
 		{
-			sym = (struct symtab_command *) lc;
-			if (output_64(sym->nsyms, sym->symoff, sym->stroff, ptr, slist) == EXIT_FAILURE)
+			symc = (struct symtab_command *)lc;
+			if (output_64(symc, ptr) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 			break ;
 		}
-		lc = (struct load_command*)((uint8_t *) lc + lc->cmdsize);
-		//lc = (void*) lc + lc->cmdsize;
+		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
 		++i;
 	}
 	return (EXIT_SUCCESS);
