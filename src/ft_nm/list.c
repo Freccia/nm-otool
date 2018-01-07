@@ -6,16 +6,33 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:23:17 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/06 19:11:59 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/07 16:56:42 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
+void	free_list(t_strtab *slist)
+{
+	t_strtab	*ptr;
+	t_strtab	*tmp;
+
+	ptr = slist;
+	while (ptr)
+	{
+		tmp = ptr->next;
+		free(ptr->strx);
+		free(ptr);
+		ptr = tmp;
+	}
+}
+
 int		list_push(t_strtab **slist, struct nlist_64 symtab, char *strtab)
 {
 	t_strtab	*new;
 
+	if (ft_strncmp(RADR, strtab + symtab.n_un.n_strx, ft_strlen(RADR)) == 0)
+		return (EXIT_SUCCESS);
 	if ((new = malloc(sizeof(t_strtab))) == NULL)
 		return (EXIT_FAILURE);
 	new->next = *slist;
