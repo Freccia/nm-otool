@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/04 18:37:28 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/07 19:19:28 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int			main(int ac, char **av)
 	char		*ptr;
 	struct stat	buf;
 
+	// TODO parse options
 	if (ac < 2 && (fd = open("a.out", O_RDONLY)) < 0)
 		return (usage(av[0]));
 	else if (ac >= 2 && (fd = open(av[1], O_RDONLY)) < 0)

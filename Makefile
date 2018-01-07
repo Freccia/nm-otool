@@ -6,7 +6,7 @@
 #    By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/04 15:18:12 by lfabbro           #+#    #+#              #
-#    Updated: 2018/01/06 18:35:05 by lfabbro          ###   ########.fr        #
+#    Updated: 2018/01/07 16:01:42 by lfabbro          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ INC_DIR		= include libft/include libft/libft
 LIB_DIR		= libft
 
 CC			= clang
-CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -g
 INC			= $(addprefix -I./,$(INC_DIR))
 LIB			= $(addprefix -L./,$(LIB_DIR))
 LIB			+= -lft
