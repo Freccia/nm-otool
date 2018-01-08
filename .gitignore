@@ -4,6 +4,7 @@
 obj
 ._*
 .DS*
+test
 
 # Vim Swap Files
 .*.sw*

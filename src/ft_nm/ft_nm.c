@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 15:04:02 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/08 19:20:34 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ int			usage(char *name)
 {
 	ft_printfd(2, "Usage: %s /path/to/exec\n", name);
 	return (EXIT_FAILURE);
+}
+
+void	handle_lib(void *ptr)
+{
+	(void)ptr;
 }
 
 // TODO Should swap bytes?  --> swap all mmapped memory CIGAM
@@ -47,8 +52,10 @@ void		ft_nm(char *ptr)
 	{
 		handle_fat(ptr);
 	}
+	else if (*(uint64_t*)ptr == RANLIB)
+		handle_lib(ptr);
 	else
-		ft_printf("The file was not recognized as a valid object file.\n");
+		ft_printfd(2, "The file was not recognized as a valid object file.\n\n");
 }
 
 int			main(int ac, char **av)
