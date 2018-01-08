@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 15:48:18 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/08 21:24:54 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 
+# define RANLIB 0x0a3e686372613c21
 # define RADR	"radr://"
 
 enum byte_sex {
@@ -38,11 +39,6 @@ enum byte_sex {
 		(((a) >> 8) & 0x0000ff00) | \
 		((unsigned int)(a) >> 24) )
 
-#define SWAP_LONG(a) ( ((a) << 24) | \
-		(((a) << 8) & 0x00ff0000) | \
-		(((a) >> 8) & 0x0000ff00) | \
-		((unsigned long)(a) >> 24) )
-
 typedef struct s_strtab		t_strtab;
 typedef struct s_sections	t_sections;
 typedef struct s_cnt		cnt;
@@ -57,7 +53,7 @@ struct s_cnt
 struct s_sections
 {
 	uint16_t		st_text;
-	uint16_t		st_data;
+	uint32_t		st_data;
 	uint16_t		st_bss;
 	uint16_t		st_common;
 };

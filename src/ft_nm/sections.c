@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:41:03 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 14:52:52 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/08 18:40:30 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static uint32_t	init_section_64(t_sections *sects, uint32_t nsects,
 	k = 1;
 	while (k <= nsects)
 	{
+		//ft_printf("---%s %x\n", section->sectname, j);
 		if (!ft_strcmp(section->sectname, SECT_TEXT))
 			sects->st_text = j;
 		else if (!ft_strcmp(section->sectname, SECT_DATA))
@@ -50,11 +51,16 @@ void		fill_sections_64(t_sections *sects, struct load_command *lc, uint32_t ncmd
 		if (lc->cmd == LC_SEGMENT_64 && ft_strcmp(SEG_PAGEZERO, segcomm->segname) != 0)
 		{
 			section = (struct section_64 *)((uint8_t*)segcomm + sizeof(struct segment_command_64));
-			j += init_section_64(sects, segcomm->nsects, section, j);
+			j = init_section_64(sects, segcomm->nsects, section, j);
 		}
 		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
 		++i;
 	}
+//	ft_printf("TXT: %x\n", sects->st_text);
+//	ft_printf("DAT: %x\n", sects->st_data);
+	//ft_printf("CNT: %x\n", sects->st_const);
+//	ft_printf("BSS: %x\n", sects->st_bss);
+//	ft_printf("COM: %x\n", sects->st_common);
 }
 
 static uint32_t	init_section_32(t_sections *sects, uint32_t nsects, 
