@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 00:24:39 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/08 15:48:18 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,35 @@ int			handle_fat(void *ptr);
 int			handle_64(void *ptr);
 int			handle_32(void *ptr);
 
+
+/*
+**	SECTIONS
+*/
+void		fill_sections_64(t_sections *sects, struct load_command *lc, uint32_t ncmds);
+void		fill_sections_32(t_sections *sects, struct load_command *lc, uint32_t ncmds);
+
+/*
+**	LIST
+*/
 int			list_push(t_strtab **slist, struct nlist_64 *symtab, char *strtab);
 void		insertion_sort(t_strtab **slist);
 void		free_list(t_strtab *slist);
 
+/*
+**	TOOLS
+*/
 char		get_symbol_type(uint8_t n_type, uint16_t nsects, t_sections sects);
 void		print_list_32(t_strtab *slist, t_sections sects);
 void		print_list_64(t_strtab *slist, t_sections sects);
 
+/*
+**	SWAP
+*/
 int			should_swap_bytes_fat(uint32_t magic);
 int			should_swap_bytes(uint32_t magic);
-
 void		swap_fat_header(struct fat_header *fat_header);
 void		swap_fat_arch(struct fat_arch *fat_archs, unsigned long nfat_arch);
+void		swap_fat(struct fat_header *fat_header, struct fat_arch *fat_archs);
 
 int			error(char *str);
 

@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 00:26:09 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/08 15:04:02 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,6 @@ int			usage(char *name)
 {
 	ft_printfd(2, "Usage: %s /path/to/exec\n", name);
 	return (EXIT_FAILURE);
-}
-
-int			should_swap_bytes_fat(uint32_t magic)
-{
-	return (magic == FAT_CIGAM || magic == FAT_CIGAM_64);
-}
-
-int			should_swap_bytes(uint32_t magic)
-{
-	return (magic == MH_CIGAM || magic == MH_CIGAM_64);
 }
 
 // TODO Should swap bytes?  --> swap all mmapped memory CIGAM
@@ -51,12 +41,14 @@ void		ft_nm(char *ptr)
 	}
 	else if (magic_number == FAT_MAGIC_64 || magic_number == FAT_CIGAM_64)
 	{
-		handle_fat(ptr);
+		handle_fat(ptr); // TODO 64
 	}
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
 		handle_fat(ptr);
 	}
+	else
+		ft_printf("The file was not recognized as a valid object file.\n");
 }
 
 int			main(int ac, char **av)

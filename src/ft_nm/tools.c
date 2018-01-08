@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/07 20:42:08 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/07 22:23:38 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/08 14:39:49 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char		get_symbol_type(uint8_t n_type, uint16_t n_sect, t_sections sects)
 {
 	char	ret;
 
-	ret = '-';
+	ret = '-'; // TODO ok?
 	if ((n_type & N_TYPE) == N_UNDF || (n_type & N_TYPE) == N_PBUD)
 		ret = 'U';
 	else if ((n_type & N_TYPE) == N_SECT)

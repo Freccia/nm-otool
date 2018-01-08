@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:23:17 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/07 22:12:59 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/08 14:51:13 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,20 @@ void	free_list(t_strtab *slist)
 	}
 }
 
-//int		list_push_32(t_strtab **slist, struct nlist symtab, char *strtab)
-//{
-//	void	*ptr;
-//
-//	return (list_push(slist, (struct nlist_64)ptr, ));
-//}
-
 int		list_push(t_strtab **slist, struct nlist_64 *symtab, char *strtab)
 {
 	t_strtab	*new;
 
-		// TODO TEST IF n_strx is 0 -> null
 	if (ft_strncmp(RADR, strtab + symtab->n_un.n_strx, ft_strlen(RADR)) == 0)
 		return (EXIT_SUCCESS);
 	if ((new = malloc(sizeof(**slist))) == NULL)
 		return (EXIT_FAILURE);
 	new->next = *slist;
-	new->strx = ft_strdup(strtab + symtab->n_un.n_strx);
+	// TODO OK ??
+	if (strtab + symtab->n_un.n_strx != NULL)
+		new->strx = ft_strdup(strtab + symtab->n_un.n_strx);
+	else
+		new->strx = NULL;
 	new->type = symtab->n_type;
 	new->sect = symtab->n_sect;
 	new->desc = symtab->n_desc;
