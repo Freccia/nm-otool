@@ -6,13 +6,13 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:41:26 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 19:45:56 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 20:25:19 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static int		output_32(struct symtab_command *symc, char *ptr,
+static int		output_32(struct symtab_command *symc, void *ptr,
 		t_sections sects)
 {
 	t_strtab		*slist;

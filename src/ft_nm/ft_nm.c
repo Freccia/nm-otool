@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 19:45:59 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 20:33:11 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ int			main(int ac, char **av)
 	if ((ptr = mmap(0, buf.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0))
 			== MAP_FAILED)
 		return (error("mmap failed"));
+	if (ft_nm_parse(ptr, buf.st_size))
+		return (EXIT_FAILURE);
 	ft_nm(ptr);
 	if (munmap(ptr, buf.st_size) < 0)
 		return (error("munmap failed"));

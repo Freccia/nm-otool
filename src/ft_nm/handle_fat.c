@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:43:49 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 19:40:33 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 20:21:35 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ int				handle_fat(void *ptr)
 	uint32_t				i;
 
 	i = 0;
-	header = (struct fat_header*)ptr;
-	arch_ptr = (struct fat_arch*)((char*)header + sizeof(*header));
+	header = (struct fat_header *)ptr;
+	arch_ptr = (struct fat_arch *)((char *)header + sizeof(*header));
 	if (should_swap_bytes_fat(header->magic))
 		swap_fat(header, arch_ptr);
 	if (has_64(ptr, header, arch_ptr) == 1)
@@ -75,10 +75,10 @@ int				handle_fat(void *ptr)
 		while (i < header->nfat_arch)
 		{
 			if (arch_ptr->cputype == CPU_TYPE_I386)
-				handle_32((void*)ptr + arch_ptr->offset);
+				handle_32((void *)ptr + arch_ptr->offset);
 			else
 				put_not_handled(arch_ptr->cputype);
-			arch_ptr = (struct fat_arch*)((char*)arch_ptr + sizeof(*arch_ptr));
+			arch_ptr = (struct fat_arch*)((char *)arch_ptr + sizeof(*arch_ptr));
 			++i;
 		}
 	}
