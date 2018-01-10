@@ -6,13 +6,14 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:40:37 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 17:38:10 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 19:43:47 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static int		output_64(struct symtab_command *symc, char *ptr, t_sections sects)
+static int		output_64(struct symtab_command *symc, char *ptr,
+		t_sections sects)
 {
 	t_strtab		*slist;
 	struct nlist_64	*symtab;
@@ -38,7 +39,7 @@ static int		output_64(struct symtab_command *symc, char *ptr, t_sections sects)
 	return (EXIT_SUCCESS);
 }
 
-int			handle_64(void *ptr)
+int				handle_64(void *ptr)
 {
 	struct mach_header_64	*header;
 	struct load_command		*lc;

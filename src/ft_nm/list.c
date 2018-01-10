@@ -6,13 +6,13 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:23:17 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 14:51:13 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 19:41:49 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-void	free_list(t_strtab *slist)
+void		free_list(t_strtab *slist)
 {
 	t_strtab	*ptr;
 	t_strtab	*tmp;
@@ -27,7 +27,7 @@ void	free_list(t_strtab *slist)
 	}
 }
 
-int		list_push(t_strtab **slist, struct nlist_64 *symtab, char *strtab)
+int			list_push(t_strtab **slist, struct nlist_64 *symtab, char *strtab)
 {
 	t_strtab	*new;
 
@@ -36,7 +36,6 @@ int		list_push(t_strtab **slist, struct nlist_64 *symtab, char *strtab)
 	if ((new = malloc(sizeof(**slist))) == NULL)
 		return (EXIT_FAILURE);
 	new->next = *slist;
-	// TODO OK ??
 	if (strtab + symtab->n_un.n_strx != NULL)
 		new->strx = ft_strdup(strtab + symtab->n_un.n_strx);
 	else
