@@ -6,13 +6,14 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:41:26 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 14:51:50 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 19:45:56 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static int		output_32(struct symtab_command *symc, char *ptr, t_sections sects)
+static int		output_32(struct symtab_command *symc, char *ptr,
+		t_sections sects)
 {
 	t_strtab		*slist;
 	struct nlist	*symtab;
@@ -25,7 +26,8 @@ static int		output_32(struct symtab_command *symc, char *ptr, t_sections sects)
 	i = 0;
 	while (i < (int)symc->nsyms)
 	{
-		if (list_push(&slist, (struct nlist_64*)&symtab[i], strtab) == EXIT_FAILURE)
+		if (list_push(&slist, (struct nlist_64*)&symtab[i], strtab)
+				== EXIT_FAILURE)
 		{
 			free_list(slist);
 			return (EXIT_FAILURE);
@@ -38,9 +40,9 @@ static int		output_32(struct symtab_command *symc, char *ptr, t_sections sects)
 	return (EXIT_SUCCESS);
 }
 
-int			handle_32(void *ptr)
+int				handle_32(void *ptr)
 {
-	struct mach_header	*header;
+	struct mach_header		*header;
 	struct load_command		*lc;
 	struct symtab_command	*symc;
 	t_sections				sects;

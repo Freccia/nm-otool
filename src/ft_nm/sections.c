@@ -6,13 +6,13 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:41:03 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/08 18:40:30 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 19:31:47 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static uint32_t	init_section_64(t_sections *sects, uint32_t nsects, 
+static uint32_t	init_section_64(t_sections *sects, uint32_t nsects,
 		struct section_64 *section, uint32_t j)
 {
 	uint32_t	k;
@@ -20,7 +20,6 @@ static uint32_t	init_section_64(t_sections *sects, uint32_t nsects,
 	k = 1;
 	while (k <= nsects)
 	{
-		//ft_printf("---%s %x\n", section->sectname, j);
 		if (!ft_strcmp(section->sectname, SECT_TEXT))
 			sects->st_text = j;
 		else if (!ft_strcmp(section->sectname, SECT_DATA))
@@ -31,12 +30,14 @@ static uint32_t	init_section_64(t_sections *sects, uint32_t nsects,
 			sects->st_common = j;
 		++k;
 		++j;
-		section = (struct section_64 *)((char*)section + sizeof(struct section_64));
+		section = (struct section_64 *)((char*)section +
+				sizeof(struct section_64));
 	}
 	return (j);
 }
 
-void		fill_sections_64(t_sections *sects, struct load_command *lc, uint32_t ncmds)
+void			fill_sections_64(t_sections *sects, struct load_command *lc,
+		uint32_t ncmds)
 {
 	struct segment_command_64	*segcomm;
 	struct section_64			*section;
@@ -48,22 +49,19 @@ void		fill_sections_64(t_sections *sects, struct load_command *lc, uint32_t ncmd
 	while (i < ncmds)
 	{
 		segcomm = (struct segment_command_64 *)lc;
-		if (lc->cmd == LC_SEGMENT_64 && ft_strcmp(SEG_PAGEZERO, segcomm->segname) != 0)
+		if (lc->cmd == LC_SEGMENT_64 &&
+				ft_strcmp(SEG_PAGEZERO, segcomm->segname) != 0)
 		{
-			section = (struct section_64 *)((uint8_t*)segcomm + sizeof(struct segment_command_64));
+			section = (struct section_64 *)((uint8_t *)segcomm +
+					sizeof(struct segment_command_64));
 			j = init_section_64(sects, segcomm->nsects, section, j);
 		}
 		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
 		++i;
 	}
-//	ft_printf("TXT: %x\n", sects->st_text);
-//	ft_printf("DAT: %x\n", sects->st_data);
-	//ft_printf("CNT: %x\n", sects->st_const);
-//	ft_printf("BSS: %x\n", sects->st_bss);
-//	ft_printf("COM: %x\n", sects->st_common);
 }
 
-static uint32_t	init_section_32(t_sections *sects, uint32_t nsects, 
+static uint32_t	init_section_32(t_sections *sects, uint32_t nsects,
 		struct section *section, uint32_t j)
 {
 	uint32_t	k;
@@ -86,26 +84,27 @@ static uint32_t	init_section_32(t_sections *sects, uint32_t nsects,
 	return (j);
 }
 
-void		fill_sections_32(t_sections *sects, struct load_command *lc, uint32_t ncmds)
+void			fill_sections_32(t_sections *sects, struct load_command *lc,
+		uint32_t ncmds)
 {
 	struct segment_command	*segcomm;
 	struct section			*section;
-	uint32_t					i;
-	uint32_t					j;
+	uint32_t				i;
+	uint32_t				j;
 
 	i = 0;
 	j = 1;
 	while (i < ncmds)
 	{
 		segcomm = (struct segment_command *)lc;
-		if (lc->cmd == LC_SEGMENT && ft_strcmp(SEG_PAGEZERO, segcomm->segname) != 0)
+		if (lc->cmd == LC_SEGMENT &&
+				ft_strcmp(SEG_PAGEZERO, segcomm->segname) != 0)
 		{
-			section = (struct section *)((uint8_t*)segcomm + sizeof(struct segment_command));
+			section = (struct section *)((uint8_t*)segcomm +
+					sizeof(struct segment_command));
 			j += init_section_32(sects, segcomm->nsects, section, j);
 		}
 		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
 		++i;
 	}
 }
-
-

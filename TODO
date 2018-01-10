@@ -1,0 +1,8 @@
+
+
+ft_nm:
+	// TODO parse options
+	// TODO open: missing file || noperm ???
+	// TODO Should swap bytes?  --> swap all mmapped memory CIGAM
+	// TODO handle fat 64
+	// TODO list.c line 43 :: handle NULL ok?
