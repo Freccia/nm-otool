@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/07 23:52:33 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 19:45:07 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 21:11:09 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ void	swap_fat_arch(struct fat_arch *fat_archs, unsigned long nfat_arch)
 void	swap_fat(struct fat_header *header, struct fat_arch *fat_archs)
 {
 	swap_fat_header(header);
-	swap_fat_arch(fat_archs, header->nfat_arch);
+	if (fat_archs)
+		swap_fat_arch(fat_archs, header->nfat_arch);
 }

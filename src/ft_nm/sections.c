@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:41:03 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 20:29:48 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 20:58:25 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void			fill_sections_32(t_sections *sects, struct load_command *lc,
 		{
 			section = (struct section *)((uint8_t*)segcomm +
 					sizeof(struct segment_command));
-			j += init_section_32(sects, segcomm->nsects, section, j);
+			j = init_section_32(sects, segcomm->nsects, section, j);
 		}
 		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
 		++i;

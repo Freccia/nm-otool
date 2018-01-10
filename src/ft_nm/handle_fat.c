@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:43:49 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 20:21:35 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 21:52:30 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ static int		has_64(void *ptr, struct fat_header *header,
 	{
 		if (arch_ptr->cputype == CPU_TYPE_X86_64)
 		{
-			handle_64((void*)ptr + arch_ptr->offset);
+			handle_64((void *)ptr + arch_ptr->offset);
 			return (1);
 		}
-		arch_ptr = (struct fat_arch*)((char*)arch_ptr + sizeof(*arch_ptr));
+		arch_ptr = (struct fat_arch *)((char *)arch_ptr + sizeof(*arch_ptr));
 		++i;
 	}
 	return (0);
@@ -78,7 +78,7 @@ int				handle_fat(void *ptr)
 				handle_32((void *)ptr + arch_ptr->offset);
 			else
 				put_not_handled(arch_ptr->cputype);
-			arch_ptr = (struct fat_arch*)((char *)arch_ptr + sizeof(*arch_ptr));
+			arch_ptr = (struct fat_arch *)((char *)arch_ptr + sizeof(*arch_ptr));
 			++i;
 		}
 	}

@@ -6,30 +6,30 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 20:33:11 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 22:16:09 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-int			error(char *str)
+int				error(char *str)
 {
 	ft_printfd(2, "%s\n", str);
 	return (EXIT_FAILURE);
 }
 
-int			usage(char *name)
+int				usage(char *name)
 {
 	ft_printfd(2, "Usage: %s /path/to/exec\n", name);
 	return (EXIT_FAILURE);
 }
 
-void		handle_lib(void *ptr)
+void			handle_lib(void *ptr)
 {
 	(void)ptr;
 }
 
-void		ft_nm(char *ptr)
+static void		ft_nm(void *ptr)
 {
 	uint32_t	magic_number;
 
@@ -51,12 +51,12 @@ void		ft_nm(char *ptr)
 		handle_fat(ptr);
 	}
 	else if (*(uint64_t*)ptr == RANLIB)
-		handle_lib(ptr);
+		handle_lib(ptr); // TODO handle lib
 	else
-		error("The file was not recognized as a valid object file.\n\n");
+		error("The file was not recognized as a valid object file.\n");
 }
 
-int			main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	int			fd;
 	char		*ptr;
@@ -72,7 +72,7 @@ int			main(int ac, char **av)
 			== MAP_FAILED)
 		return (error("mmap failed"));
 	if (ft_nm_parse(ptr, buf.st_size))
-		return (EXIT_FAILURE);
+		return (error("The file was not recognized as a valid object file.\n"));
 	ft_nm(ptr);
 	if (munmap(ptr, buf.st_size) < 0)
 		return (error("munmap failed"));
