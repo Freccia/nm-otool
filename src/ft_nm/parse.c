@@ -1,68 +1,71 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle64.c                                         :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/04 17:40:37 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 20:21:18 by lfabbro          ###   ########.fr       */
+/*   Created: 2018/01/10 20:04:20 by lfabbro           #+#    #+#             */
+/*   Updated: 2018/01/10 20:32:50 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static int		output_64(struct symtab_command *symc, void *ptr,
-		t_sections sects)
+static int		parse_symtab_command(size_t size,
+		struct symtab_command *symc)
 {
-	t_strtab		*slist;
-	struct nlist_64	*symtab;
-	char			*strtab;
+	size_t			tot;
 	int				i;
 
-	slist = NULL;
-	symtab = (struct nlist_64 *)((char *)ptr + symc->symoff);
-	strtab = (char *)ptr + symc->stroff;
+	if (symc->stroff > size)
+		return (EXIT_FAILURE);
+	tot = 0;
 	i = 0;
 	while (i < (int)symc->nsyms)
 	{
-		if (list_push(&slist, &symtab[i], strtab) == EXIT_FAILURE)
-		{
-			free_list(slist);
+		tot += sizeof(struct nlist_64);
+		if (tot > size)
 			return (EXIT_FAILURE);
-		}
 		++i;
 	}
-	insertion_sort(&slist);
-	print_list_64(slist, sects);
-	free_list(slist);
 	return (EXIT_SUCCESS);
 }
 
-int				handle_64(void *ptr)
+static int		parse_load_commands(size_t size, uint32_t ncmds,
+		struct load_command *lc)
 {
-	struct mach_header_64	*header;
-	struct load_command		*lc;
 	struct symtab_command	*symc;
-	t_sections				sects;
+	size_t					tot;
 	uint32_t				i;
 
-	header = (struct mach_header_64 *)ptr;
-	lc = ptr + sizeof(*header);
+	tot = 0;
 	i = 0;
-	ft_bzero((void*)&sects, sizeof(t_sections));
-	fill_sections_64(&sects, lc, header->ncmds);
-	while (i < header->ncmds)
+	while (i < ncmds)
 	{
 		if (lc->cmd == LC_SYMTAB)
 		{
 			symc = (struct symtab_command *)lc;
-			if (output_64(symc, ptr, sects) == EXIT_FAILURE)
+			if (parse_symtab_command(size, symc))
 				return (EXIT_FAILURE);
-			break ;
 		}
+		tot += (size_t)lc->cmdsize;
+		if (tot > size)
+			return (EXIT_FAILURE);
 		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
 		++i;
 	}
+	return (EXIT_SUCCESS);
+}
+
+int		ft_nm_parse(void *ptr, size_t size)
+{
+	struct mach_header		*header;
+	struct load_command		*lc;
+
+	header = (struct mach_header *)ptr;
+	lc = ptr + sizeof(*header);
+	if (parse_load_commands(size, header->ncmds, lc))
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

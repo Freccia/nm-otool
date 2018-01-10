@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 19:22:11 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/10 20:30:26 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,13 @@
 # define RANLIB 0x0a3e686372613c21
 # define RADR	"radr://"
 
+/*
 enum byte_sex {
 	UNKNOWN_BYTE_SEX,
 	BIG_ENDIAN_BYTE_SEX,
 	LITTLE_ENDIAN_BYTE_SEX
 };
+*/
 
 #define SWAP_SHORT(a) ( ((a & 0xff) << 8) | ((unsigned short)(a) >> 8) )
 
@@ -72,6 +74,10 @@ int			handle_fat(void *ptr);
 int			handle_64(void *ptr);
 int			handle_32(void *ptr);
 
+/*
+**	PARSE
+*/
+int			ft_nm_parse(void *ptr, size_t size);
 
 /*
 **	SECTIONS
