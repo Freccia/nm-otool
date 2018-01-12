@@ -6,7 +6,7 @@
 #    By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/04 15:18:12 by lfabbro           #+#    #+#              #
-#    Updated: 2018/01/12 19:04:01 by lfabbro          ###   ########.fr        #
+#    Updated: 2018/01/12 19:20:23 by lfabbro          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,7 +73,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 clean:
 	@printf "$(WHITE) [ $()CLEAN $(WHITE)]$(ENDC)\n"
-	@rm -fvr $(OBJ_DIR)
+	@rm -fvr $(OBJ_DIR) $(FT_NM).dSYM $(FT_OTOOL).dSYM
 
 fclean: clean
 	@printf "$(WHITE) [ $(RED)FCLEAN $(WHITE)]$(ENDC)\n"
