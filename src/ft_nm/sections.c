@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 14:41:03 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 20:58:25 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/12 17:07:11 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static uint32_t	init_section_64(t_sections *sects, uint32_t nsects,
 			sects->st_common = j;
 		++k;
 		++j;
-		section = (struct section_64 *)((char*)section +
+		section = (struct section_64 *)((uint8_t *)section +
 				sizeof(struct section_64));
 	}
 	return (j);

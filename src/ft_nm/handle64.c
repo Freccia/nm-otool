@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:40:37 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 20:21:18 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/12 19:00:09 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int		output_64(struct symtab_command *symc, void *ptr,
 	return (EXIT_SUCCESS);
 }
 
-int				handle_64(void *ptr)
+int				nm_handle_64(void *ptr)
 {
 	struct mach_header_64	*header;
 	struct load_command		*lc;
