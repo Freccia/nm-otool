@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/04 17:43:49 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 19:03:12 by lfabbro          ###   ########.fr       */
+/*   Created: 2018/01/12 18:47:21 by lfabbro           #+#    #+#             */
+/*   Updated: 2018/01/12 19:17:06 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_nm.h"
+#include "ft_otool.h"
 
 static void		put_not_handled(cpu_type_t cputype)
 {
@@ -38,7 +38,7 @@ static void		put_not_handled(cpu_type_t cputype)
 	ft_printf("CPU architecture %s not handled.\n\n", cpu);
 }
 
-static int		has_64(void *ptr, struct fat_header *header,
+static int		has_64(void *ptr, char *name, struct fat_header *header,
 		struct fat_arch *arch_ptr)
 {
 	uint32_t	i;
@@ -48,7 +48,7 @@ static int		has_64(void *ptr, struct fat_header *header,
 	{
 		if (arch_ptr->cputype == CPU_TYPE_X86_64)
 		{
-			nm_handle_64((void *)ptr + arch_ptr->offset);
+			otool_handle_64((void *)ptr + arch_ptr->offset, name);
 			return (1);
 		}
 		arch_ptr = (struct fat_arch *)((char *)arch_ptr + sizeof(*arch_ptr));
@@ -57,30 +57,44 @@ static int		has_64(void *ptr, struct fat_header *header,
 	return (0);
 }
 
-int				nm_handle_fat(void *ptr)
+static int		has_others(void *ptr, char *name,
+		struct fat_header *header, struct fat_arch *arch_ptr)
+{
+	char					*name_arch;
+	uint32_t				i;
+
+	name_arch = NULL;
+	i = 0;
+	while (i < header->nfat_arch)
+	{
+		if (arch_ptr->cputype == CPU_TYPE_I386)
+		{
+			if ((name_arch = calloc(1, ft_strlen(name) + ft_strlen(ARCH_i386) + 1)) == NULL)
+				return (1);
+			name_arch = ft_strncpy(name_arch, name, ft_strlen(name));
+			name_arch = ft_strcat(name_arch, ARCH_i386);
+			otool_handle_32((void *)ptr + arch_ptr->offset, name_arch);
+			free(name_arch);
+		}
+		else
+			put_not_handled(arch_ptr->cputype);
+		arch_ptr = (struct fat_arch *)((char *)arch_ptr + sizeof(*arch_ptr));
+		++i;
+	}
+	return (0);
+}
+
+void			otool_handle_fat(void *ptr, char *name)
 {
 	struct fat_header		*header;
 	struct fat_arch			*arch_ptr;
-	uint32_t				i;
 
-	i = 0;
 	header = (struct fat_header *)ptr;
 	arch_ptr = (struct fat_arch *)((char *)header + sizeof(*header));
 	if (should_swap_bytes_fat(header->magic))
 		swap_fat(header, arch_ptr);
-	if (has_64(ptr, header, arch_ptr) == 1)
-		return (EXIT_SUCCESS);
+	if (has_64(ptr, name, header, arch_ptr) == 1)
+		return ;
 	else
-	{
-		while (i < header->nfat_arch)
-		{
-			if (arch_ptr->cputype == CPU_TYPE_I386)
-				nm_handle_32((void *)ptr + arch_ptr->offset);
-			else
-				put_not_handled(arch_ptr->cputype);
-			arch_ptr = (struct fat_arch *)((char *)arch_ptr + sizeof(*arch_ptr));
-			++i;
-		}
-	}
-	return (EXIT_SUCCESS);
+		has_others(ptr, name, header, arch_ptr);
 }

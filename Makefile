@@ -6,7 +6,7 @@
 #    By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/04 15:18:12 by lfabbro           #+#    #+#              #
-#    Updated: 2018/01/10 20:30:51 by lfabbro          ###   ########.fr        #
+#    Updated: 2018/01/12 19:04:01 by lfabbro          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,9 @@ FT_OTOOL	= ft_otool
 
 NAME		= $(FT_NM) $(FT_OTOOL)
 
-SRC_NM		= ft_nm.c parse.c handle32.c handle64.c handle_fat.c \
-				list.c tools.c swap.c sections.c
-SRC_OT		= ft_otool.c
+SRC_NM		= ft_nm.c handle32.c handle64.c handle_fat.c list.c tools.c sections.c
+SRC_OT		= ft_otool.c handle32.c handle64.c handle_fat.c
+SRC_COMMON	= parse.c swap.c
 
 SRC_DIR		= src
 OBJ_DIR		= obj
@@ -40,21 +40,24 @@ SRC_FILES_OT	= $(addprefix $(SRC_DIR_OT)/,$(SRC_OT))
 OBJ_FILES_NM	= $(patsubst $(SRC_DIR_NM)/%.c,$(OBJ_DIR_NM)/%.o,$(SRC_FILES_NM))
 OBJ_FILES_OT	= $(patsubst $(SRC_DIR_OT)/%.c,$(OBJ_DIR_OT)/%.o,$(SRC_FILES_OT))
 
+SRC_FILES_COMMON = $(addprefix $(SRC_DIR)/,$(SRC_COMMON))
+OBJ_FILES_COMMON = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES_COMMON))
+
 RED			= \033[0;31m
 GREEN		= \033[0;32m
 YELLOW		= \033[0;33m
 WHITE		= \033[1;37m
 ENDC		= \033[0m
 
-.PHONY:	all directories clean fclean re lib libclean libre norme
+.PHONY:	all clean fclean re lib libclean libre norme
 
-all: directories $(FT_NM) $(FT_OTOOL)
+all: $(FT_NM) $(FT_OTOOL)
 
-$(FT_NM): $(OBJ_FILES_NM)
+$(FT_NM): $(OBJ_FILES_COMMON) $(OBJ_FILES_NM)
 	$(CC) $(CFLAGS) $(INC) $^ -o $@ $(LIB)
 	@printf "$(WHITE) [ $(GREEN)OK $(WHITE)] $(FT_NM) $(ENDC)\n"
 
-$(FT_OTOOL): $(OBJ_FILES_OT)
+$(FT_OTOOL): $(OBJ_FILES_COMMON) $(OBJ_FILES_OT)
 	$(CC) $(CFLAGS) $(INC) $^ -o $@ $(LIB)
 	@printf "$(WHITE) [ $(GREEN)OK $(WHITE)] $(FT_OTOOL) $(ENDC)\n"
 
@@ -64,8 +67,9 @@ $(OBJ_DIR_NM)/%.o: $(SRC_DIR_NM)/%.c
 $(OBJ_DIR_OT)/%.o: $(SRC_DIR_OT)/%.c
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-directories:
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR) $(OBJ_DIR_NM) $(OBJ_DIR_OT)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 clean:
 	@printf "$(WHITE) [ $()CLEAN $(WHITE)]$(ENDC)\n"

@@ -20,7 +20,7 @@ do
 	diff $TMP1 $TMP2  $DEBUG 1>&2 2>/dev/null
 	if [ $? -ne 0 ]; then
 		echo "File $f mismatch"
-		exit 1
+#		exit 1
 	fi
 done
 
