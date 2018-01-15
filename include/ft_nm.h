@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 19:30:01 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 12:12:52 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void		free_list(t_strtab *slist);
 /*
 **	TOOLS
 */
-char		get_symbol_type(uint8_t n_type, uint16_t nsects, t_sections sects);
 void		print_list_32(t_strtab *slist, t_sections sects);
 void		print_list_64(t_strtab *slist, t_sections sects);
 

@@ -6,127 +6,13 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/10 20:04:20 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 18:15:47 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 12:19:29 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static int		parse_symtab_command(size_t size,
-		struct symtab_command *symc, size_t tot)
-{
-	int				i;
-
-	if (symc->stroff > size)
-		return (EXIT_FAILURE);
-	i = 0;
-	while (i < (int)symc->nsyms)
-	{
-		tot += sizeof(struct nlist_64);
-		if (tot > size)
-			return (EXIT_FAILURE);
-		++i;
-	}
-	return (EXIT_SUCCESS);
-}
-
-static int		parse_segment_command_32(size_t size,
-		struct segment_command *segc32, size_t tot)
-{
-	struct section		*sect;
-	uint32_t			k;
-
-	sect = (struct section *)((uint8_t *)segc32 + sizeof(*segc32));
-	k = 0;
-	while (k < segc32->nsects)
-	{
-		tot += sizeof(struct section);
-		if (tot < size)
-			return (EXIT_FAILURE);
-		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0)
-		{
-			if ((size_t)sect->offset > size)
-				return (EXIT_FAILURE);
-		}
-		++k;
-	}
-	return (EXIT_SUCCESS);
-}
-
-static int		parse_segment_command_64(size_t size,
-		struct segment_command_64 *segc64, size_t tot)
-{
-	struct section_64	*sect;
-	uint32_t			k;
-
-	sect = (struct section_64 *)((uint8_t *)segc64 + sizeof(*segc64));
-	k = 0;
-	while (k < segc64->nsects)
-	{
-		tot += sizeof(struct section_64);
-		if (tot < size)
-			return (EXIT_FAILURE);
-		if (ft_strcmp(sect->sectname, SECT_TEXT) == 0)
-		{
-			if ((size_t)sect->offset > size)
-				return (EXIT_FAILURE);
-		}
-		++k;
-	}
-	return (EXIT_SUCCESS);
-}
-
-static int		parse_load_commands_bis(size_t size,
-		struct load_command *lc, size_t tot)
-{
-		struct segment_command_64	*segc64;
-		struct segment_command		*segc32;
-		struct symtab_command		*symc;
-
-		if (lc->cmd == LC_SYMTAB)
-		{
-			symc = (struct symtab_command *)lc;
-			if (parse_symtab_command(size, symc, tot))
-				return (EXIT_FAILURE);
-		}
-		else if (lc->cmd == LC_SEGMENT)
-		{
-			segc32 = (struct segment_command *)lc;
-			if (parse_segment_command_32(size, segc32, tot))
-				return (EXIT_FAILURE);
-		}
-		else if (lc->cmd == LC_SEGMENT_64)
-		{
-			segc64 = (struct segment_command_64 *)lc;
-			if (parse_segment_command_64(size, segc64, tot))
-				return (EXIT_FAILURE);
-		}
-		return (EXIT_SUCCESS);
-}
-
-static int		parse_load_commands(size_t size, uint32_t ncmds,
-		struct load_command *lc)
-{
-	void		*ptr;
-	size_t		tot;
-	uint32_t	i;
-
-	ptr = NULL;
-	tot = 0;
-	i = 0;
-	while (i < ncmds)
-	{
-		parse_load_commands_bis(size, lc, tot);
-		tot += (size_t)lc->cmdsize;
-		if (tot > size)
-			return (EXIT_FAILURE);
-		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
-		++i;
-	}
-	return (EXIT_SUCCESS);
-}
-
-static int		parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
+static int	parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
 {
 	struct mach_header	*mach_header;
 	struct load_command *lc;
@@ -142,7 +28,7 @@ static int		parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
 	return (EXIT_SUCCESS);
 }
 
-static int		parse_fat(void *ptr, size_t size)
+static int	parse_fat(void *ptr, size_t size)
 {
 	struct fat_header	*header;
 	struct fat_arch		*arch_ptr;
@@ -172,7 +58,7 @@ static int		parse_fat(void *ptr, size_t size)
 	return (EXIT_SUCCESS);
 }
 
-int				ft_nm_parse(void *ptr, size_t size)
+int			ft_parse_binary(void *ptr, size_t size)
 {
 	struct mach_header		*header;
 	struct load_command		*lc;
