@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 19:05:55 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:14:50 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 19:59:43 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static char		*object_name(char *name, char *obj_name)
 	str = ft_strcpy(str, name);
 	str = ft_strcat(str, "(");
 	str = ft_strcat(str, obj_name);
-	str = ft_strcat(str, ")");
+	str = ft_strcat(str, "):");
 	return (str);
 }
 
