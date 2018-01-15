@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:50:16 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 19:14:56 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,7 @@ int				usage(char *name)
 	return (EXIT_FAILURE);
 }
 
-void			nm_handle_lib(void *ptr)
-{
-	(void)ptr;
-}
-
-static void		ft_nm(void *ptr)
+static void		ft_nm(void *ptr, char *name)
 {
 	uint32_t	magic_number;
 
@@ -51,7 +46,7 @@ static void		ft_nm(void *ptr)
 		nm_handle_fat(ptr);
 	}
 	else if (magic_number == FT_ARMAG)
-		nm_handle_lib(ptr);
+		nm_handle_archive(ptr, name);
 	else
 		error("The file was not recognized as a valid object file\n");
 }
@@ -79,7 +74,7 @@ int				main(int ac, char **av)
 		return (error("mmap failed"));
 	if (ft_parse_binary(ptr, buf.st_size))
 		return (error("The file was not recognized as a valid object file\n"));
-	ft_nm(ptr);
+	ft_nm(ptr, ac > 1 ? av[1] : "a.out");
 	if (munmap(ptr, buf.st_size) < 0)
 		return (error("munmap failed"));
 	return (EXIT_SUCCESS);
