@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:51:54 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 12:19:40 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 13:25:36 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,13 @@
 **	RADR is a debugging symbol, not to be printed
 */
 
-# define RANLIB 0x0a3e686372613c21
+# define RANLIB (uint32_t)0x0a3e686372613c21
+
+# define SUPPORTED_ARCH(x)	x == MH_MAGIC_64 || x == MH_CIGAM_64 || \
+							  x == MH_MAGIC || x == MH_CIGAM
+
+# define SUPPORTED_FAT(x)	x == FAT_MAGIC_64 || x == FAT_CIGAM_64 || \
+							   x == FAT_MAGIC || x == FAT_CIGAM
 
 # define SWAP_SHORT(a) ( ((a & 0xff) << 8) | ((unsigned short)(a) >> 8) )
 
