@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 16:05:13 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:06:25 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:53:43 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ static void		dump_memory(void *ptr, char *name, uint64_t addr, uint64_t size)
 	}
 }
 
-static void		output_64(void *ptr, char *name, struct segment_command_64 *segc)
+static void		output_64(void *ptr, char *name,
+		struct segment_command_64 *segc)
 {
 	struct section_64		*sect;
 	uint32_t				i;
@@ -71,11 +72,7 @@ void			otool_handle_64(void *ptr, char *name)
 		if (lc->cmd == LC_SEGMENT_64)
 		{
 			segc = (struct segment_command_64 *)lc;
-			//if (ft_strcmp(segc->segname, SEG_TEXT) == 0 || 1)
-		//	{
-				output_64(ptr, name, segc);
-				break ;
-		//	}
+			output_64(ptr, name, segc);
 		}
 		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
 		++i;

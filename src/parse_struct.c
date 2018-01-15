@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 11:20:47 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 12:53:57 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:32:27 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int		parse_segment_command_64(size_t size,
 		if ((size_t)sect->offset > size)
 			return (EXIT_FAILURE);
 		++k;
-		sect = (struct section_64 *)((uint8_t *)sect + sizeof(struct section_64));
+		sect = (struct section_64*)((uint8_t*)sect + sizeof(struct section_64));
 	}
 	return (EXIT_SUCCESS);
 }
@@ -75,29 +75,29 @@ static int		parse_segment_command_64(size_t size,
 static int		parse_load_commands_bis(size_t size,
 		struct load_command *lc, size_t tot)
 {
-		struct segment_command_64	*segc64;
-		struct segment_command		*segc32;
-		struct symtab_command		*symc;
+	struct segment_command_64	*segc64;
+	struct segment_command		*segc32;
+	struct symtab_command		*symc;
 
-		if (lc->cmd == LC_SYMTAB)
-		{
-			symc = (struct symtab_command *)lc;
-			if (parse_symtab_command(size, symc, tot))
-				return (EXIT_FAILURE);
-		}
-		else if (lc->cmd == LC_SEGMENT)
-		{
-			segc32 = (struct segment_command *)lc;
-			if (parse_segment_command_32(size, segc32, tot))
-				return (EXIT_FAILURE);
-		}
-		else if (lc->cmd == LC_SEGMENT_64)
-		{
-			segc64 = (struct segment_command_64 *)lc;
-			if (parse_segment_command_64(size, segc64, tot))
-				return (EXIT_FAILURE);
-		}
-		return (EXIT_SUCCESS);
+	if (lc->cmd == LC_SYMTAB)
+	{
+		symc = (struct symtab_command *)lc;
+		if (parse_symtab_command(size, symc, tot))
+			return (EXIT_FAILURE);
+	}
+	else if (lc->cmd == LC_SEGMENT)
+	{
+		segc32 = (struct segment_command *)lc;
+		if (parse_segment_command_32(size, segc32, tot))
+			return (EXIT_FAILURE);
+	}
+	else if (lc->cmd == LC_SEGMENT_64)
+	{
+		segc64 = (struct segment_command_64 *)lc;
+		if (parse_segment_command_64(size, segc64, tot))
+			return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }
 
 int				parse_load_commands(size_t size, uint32_t ncmds,
@@ -114,7 +114,7 @@ int				parse_load_commands(size_t size, uint32_t ncmds,
 	{
 		if (parse_load_commands_bis(size, lc, tot))
 			return (EXIT_FAILURE);
-		//tot += (size_t)lc->cmdsize;
+		tot += (size_t)lc->cmdsize;
 		if (tot > size)
 			return (EXIT_FAILURE);
 		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);

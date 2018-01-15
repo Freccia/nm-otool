@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:04:07 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:54:01 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void		ft_otool(void *ptr, char *name)
 		otool_handle_fat(ptr, name);
 	}
 	else if (magic_number == FT_ARMAG)
-		otool_handle_archive(ptr, name); // TODO handle lib
+		otool_handle_archive(ptr, name);
 	else
 		error("The file was not recognized as a valid object file\n");
 }

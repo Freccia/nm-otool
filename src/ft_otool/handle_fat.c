@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:47:21 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 11:37:07 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 19:00:28 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,11 @@ static int		has_others(void *ptr, char *name,
 	{
 		if (arch_ptr->cputype == CPU_TYPE_I386)
 		{
-			if ((name_arch = calloc(1, ft_strlen(name) + ft_strlen(ARCH_i386) + 1)) == NULL)
+			if ((name_arch =
+				calloc(1, ft_strlen(name) + ft_strlen(ARCH_I386) + 1)) == NULL)
 				return (1);
 			name_arch = ft_strncpy(name_arch, name, ft_strlen(name));
-			name_arch = ft_strcat(name_arch, ARCH_i386);
+			name_arch = ft_strcat(name_arch, ARCH_I386);
 			otool_handle_32((void *)ptr + arch_ptr->offset, name_arch);
 			free(name_arch);
 		}

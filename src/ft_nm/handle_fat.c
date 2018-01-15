@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:43:49 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 19:03:12 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:51:23 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int				nm_handle_fat(void *ptr)
 				nm_handle_32((void *)ptr + arch_ptr->offset);
 			else
 				put_not_handled(arch_ptr->cputype);
-			arch_ptr = (struct fat_arch *)((char *)arch_ptr + sizeof(*arch_ptr));
+			arch_ptr = (struct fat_arch *)((char*)arch_ptr + sizeof(*arch_ptr));
 			++i;
 		}
 	}
