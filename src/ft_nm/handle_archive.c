@@ -5,30 +5,30 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/15 17:28:28 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:14:51 by lfabbro          ###   ########.fr       */
+/*   Created: 2018/01/15 19:05:55 by lfabbro           #+#    #+#             */
+/*   Updated: 2018/01/15 19:14:50 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_otool.h"
+#include "ft_nm.h"
 
-static void		ft_otool_archive(void *ptr, char *name)
+static void		ft_nm_archive(void *ptr)
 {
 	uint32_t	magic_number;
 
 	magic_number = *(uint32_t *)ptr;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
-		otool_handle_64(ptr, name);
+		nm_handle_64(ptr);
 	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
-		otool_handle_32(ptr, name);
+		nm_handle_32(ptr);
 	}
 	else if (magic_number == FAT_MAGIC_64 || magic_number == FAT_CIGAM_64 ||
 			magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
-		otool_handle_fat(ptr, name);
+		nm_handle_fat(ptr);
 	}
 	else
 		error("The file was not recognized as a valid object file\n");
@@ -49,7 +49,7 @@ static char		*object_name(char *name, char *obj_name)
 	return (str);
 }
 
-static void		otool_handle_archive_bis(void *ptr, char *name, t_archive ar,
+static void		nm_handle_archive_bis(void *ptr, char *name, t_archive ar,
 		t_quad q)
 {
 	char			*obj_name;
@@ -59,12 +59,14 @@ static void		otool_handle_archive_bis(void *ptr, char *name, t_archive ar,
 	{
 		if (q.tmp != ar.symtab[q.i])
 		{
+			ft_putchar('\n');
 			ar.ar_obj = (struct ar_hdr *)(ptr + ar.symtab[q.i]);
 			q.off = get_object_offset(ar.ar_obj);
 			obj_name = (char *)((void *)ar.ar_obj + ARCHIVE_HEADER_SIZE);
 			if ((obj_name = object_name(name, obj_name)) == NULL)
 				return ;
-			ft_otool_archive(((void *)ar.ar_obj + q.off), obj_name);
+			ft_printf("%s\n", obj_name);
+			ft_nm_archive(((void *)ar.ar_obj + q.off));
 			q.tmp = ar.symtab[q.i];
 			free(obj_name);
 		}
@@ -73,7 +75,7 @@ static void		otool_handle_archive_bis(void *ptr, char *name, t_archive ar,
 	}
 }
 
-void			otool_handle_archive(void *ptr, char *name)
+int				nm_handle_archive(void *ptr, char *name)
 {
 	t_archive		ar;
 	t_quad			q;
@@ -84,6 +86,6 @@ void			otool_handle_archive(void *ptr, char *name)
 	ar.symtab = (uint32_t *)(ptr + ar.symtab_offset + ARMAG_LEN + sizeof(int));
 	q.tot = 0;
 	q.i = 1;
-	ft_printf("Archive : %s\n", name);
-	otool_handle_archive_bis(ptr, name, ar, q);
+	nm_handle_archive_bis(ptr, name, ar, q);
+	return (EXIT_SUCCESS);
 }
