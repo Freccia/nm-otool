@@ -6,12 +6,12 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 12:12:52 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:48:22 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_NM
-# define FT_NM
+#ifndef FT_NM_H
+# define FT_NM_H
 
 # include "libft.h"
 # include "ft_common.h"
@@ -29,7 +29,7 @@
 typedef struct s_strtab		t_strtab;
 typedef struct s_sections	t_sections;
 
-struct s_sections
+struct		s_sections
 {
 	uint16_t		st_text;
 	uint32_t		st_data;
@@ -37,7 +37,7 @@ struct s_sections
 	uint16_t		st_common;
 };
 
-struct s_strtab
+struct		s_strtab
 {
 	t_strtab		*next;
 	char			*strx;
@@ -54,8 +54,10 @@ int			nm_handle_32(void *ptr);
 /*
 **	SECTIONS
 */
-void		fill_sections_64(t_sections *sects, struct load_command *lc, uint32_t ncmds);
-void		fill_sections_32(t_sections *sects, struct load_command *lc, uint32_t ncmds);
+void		fill_sections_64(t_sections *sects, struct load_command *lc,
+		uint32_t ncmds);
+void		fill_sections_32(t_sections *sects, struct load_command *lc,
+		uint32_t ncmds);
 
 /*
 **	LIST

@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/10 20:04:20 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 17:12:55 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:25:12 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ int			parse_fat(void *ptr, size_t size)
 	tot_off = 0;
 	tot = 0;
 	i = 0;
-	if (should_swap_bytes_fat(header->magic))
-		swap_fat(header, arch_ptr);
+	should_swap_bytes_fat(header->magic) ? swap_fat(header, arch_ptr) : NULL;
 	while (i++ < header->nfat_arch)
 	{
 		tot_off += sizeof(arch_ptr->offset);

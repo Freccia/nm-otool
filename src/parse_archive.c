@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 17:09:05 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:02:49 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:50:02 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,30 @@ static int	ft_parse_binary_archive(void *ptr, size_t size)
 	return (EXIT_FAILURE);
 }
 
+static int	parse_archive_bis(void *ptr, size_t size,
+		t_archive ar, t_quad q)
+{
+	while (q.tot < ar.symtab_size)
+	{
+		if (q.tmp != ar.symtab[q.i])
+		{
+			ar.ar_obj = (struct ar_hdr *)((uint8_t *)ptr + ar.symtab[q.i]);
+			if (ft_strncmp(ar.ar_obj->ar_fmag, ARFMAG, 2))
+				return (EXIT_FAILURE);
+			if ((q.off = get_object_offset(ar.ar_obj)) == (uint32_t)-1)
+				return (EXIT_FAILURE);
+			q.tmp = ar.symtab[q.i];
+			if (ft_parse_binary_archive((void *)ar.ar_obj + q.off, size))
+				return (EXIT_FAILURE);
+		}
+		q.tot += sizeof(q.i) * 2;
+		if (q.tot > size + ar.symtab_offset)
+			return (EXIT_FAILURE);
+		q.i += 2;
+	}
+	return (EXIT_SUCCESS);
+}
+
 /*
 **	ARFMAG -> consistency check
 */
@@ -55,39 +79,18 @@ static int	ft_parse_binary_archive(void *ptr, size_t size)
 int			parse_archive(void *ptr, size_t size)
 {
 	t_archive		ar;
-	struct ar_hdr	*ar_tmp;
-	uint32_t		tmp;
-	uint32_t		off;
-	uint32_t		tot;
-	uint32_t		i;
+	t_quad			q;
 
 	ar.ar = (struct ar_hdr *)(ptr + ARMAG_LEN);
+	ar.ar_obj = NULL;
 	if (ft_strncmp(ar.ar->ar_fmag, ARFMAG, 2))
 		return (EXIT_FAILURE);
 	if ((ar.symtab_offset = get_object_offset(ar.ar)) == (uint32_t)-1)
 		return (EXIT_FAILURE);
 	ar.symtab_size = *(uint32_t *)(ptr + ar.symtab_offset + ARMAG_LEN);
 	ar.symtab = (uint32_t *)(ptr + ar.symtab_offset + ARMAG_LEN + sizeof(int));
-	tot = 0;
-	tmp = -1;
-	i = 1;
-	while (tot < ar.symtab_size)
-	{
-		if (tmp != ar.symtab[i])
-		{
-			ar_tmp = (struct ar_hdr *)((uint8_t *)ptr + ar.symtab[i]);
-			if (ft_strncmp(ar_tmp->ar_fmag, ARFMAG, 2))
-				return (EXIT_FAILURE);
-			if ((off = get_object_offset(ar_tmp)) == (uint32_t)-1)
-				return (EXIT_FAILURE);
-			tmp = ar.symtab[i];
-			if (ft_parse_binary_archive((void *)ar_tmp + off, size))
-				return (EXIT_FAILURE);
-		}
-		tot += sizeof(i) * 2;
-		if (tot > size + ar.symtab_offset)
-			return (EXIT_FAILURE);
-		i += 2;
-	}
-	return (EXIT_SUCCESS);
+	q.tot = 0;
+	q.tmp = -1;
+	q.i = 1;
+	return (parse_archive_bis(ptr, size, ar, q));
 }

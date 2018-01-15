@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 17:28:28 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:15:46 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:59:54 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static char		*object_name(char *name, char *obj_name)
 
 	len = ft_strlen(name) + ft_strlen(obj_name) + 3;
 	if ((str = malloc(sizeof(*str) + len)) == NULL)
-			return (NULL);
+		return (NULL);
 	str = ft_strcpy(str, name);
 	str = ft_strcat(str, "(");
 	str = ft_strcat(str, obj_name);
@@ -49,37 +49,41 @@ static char		*object_name(char *name, char *obj_name)
 	return (str);
 }
 
+static void		otool_handle_archive_bis(void *ptr, char *name, t_archive ar,
+		t_quad q)
+{
+	char			*obj_name;
+
+	obj_name = NULL;
+	while (q.tot < ar.symtab_size)
+	{
+		if (q.tmp != ar.symtab[q.i])
+		{
+			ar.ar_obj = (struct ar_hdr *)(ptr + ar.symtab[q.i]);
+			q.off = get_object_offset(ar.ar_obj);
+			obj_name = (char *)((void *)ar.ar_obj + ARCHIVE_HEADER_SIZE);
+			if ((obj_name = object_name(name, obj_name)) == NULL)
+				return ;
+			ft_otool_archive(((void *)ar.ar_obj + q.off), obj_name);
+			q.tmp = ar.symtab[q.i];
+			free(obj_name);
+		}
+		q.tot += sizeof(q.i) * 2;
+		q.i += 2;
+	}
+}
+
 void			otool_handle_archive(void *ptr, char *name)
 {
 	t_archive		ar;
-	struct ar_hdr	*ar_tmp;
-	char			*obj_name;
-	uint32_t		tmp;
-	uint32_t		off;
-	uint32_t		tot;
-	uint32_t		i;
+	t_quad			q;
 
 	ar.ar = (struct ar_hdr *)((uint8_t *)ptr + ARMAG_LEN);
 	ar.symtab_offset = get_object_offset(ar.ar);
 	ar.symtab_size = *(uint32_t *)(ptr + ar.symtab_offset + ARMAG_LEN);
 	ar.symtab = (uint32_t *)(ptr + ar.symtab_offset + ARMAG_LEN + sizeof(int));
-	tot = 0;
-	i = 1;
+	q.tot = 0;
+	q.i = 1;
 	ft_printf("Archive : %s\n", name);
-	while (tot < ar.symtab_size)
-	{
-		if (tmp != ar.symtab[i])
-		{
-			ar_tmp = (struct ar_hdr *)(ptr + ar.symtab[i]);
-			off = get_object_offset(ar_tmp);
-			tmp = ar.symtab[i];
-			obj_name = (char*)((void *)ar_tmp + ARCHIVE_HEADER_SIZE);
-			if ((obj_name = object_name(name, obj_name)) == NULL)
-				return ;
-			ft_otool_archive(((void *)ar_tmp + off), obj_name);
-			free(obj_name);
-		}
-		tot += sizeof(i) * 2;
-		i += 2;
-	}
+	otool_handle_archive_bis(ptr, name, ar, q);
 }
