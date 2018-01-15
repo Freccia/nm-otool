@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/10 20:04:20 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 13:24:41 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 17:12:55 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
 	return (EXIT_SUCCESS);
 }
 
-static int	parse_fat(void *ptr, size_t size)
+int			parse_fat(void *ptr, size_t size)
 {
 	struct fat_header	*header;
 	struct fat_arch		*arch_ptr;
@@ -58,16 +58,6 @@ static int	parse_fat(void *ptr, size_t size)
 	return (EXIT_SUCCESS);
 }
 
-static int	ft_parse_ranlib(void *ptr, size_t size)
-{
-	size_t		tot;
-
-	tot = 0;
-	(void)ptr;
-	(void)size;
-	return (0);
-}
-
 int			ft_parse_binary(void *ptr, size_t size)
 {
 	struct mach_header		*header;
@@ -79,8 +69,8 @@ int			ft_parse_binary(void *ptr, size_t size)
 		return (parse_fat(ptr, size));
 	if (SUPPORTED_ARCH(header->magic))
 		return (parse_load_commands(size, header->ncmds, lc));
-	else if (header->magic == RANLIB)
-		return (ft_parse_ranlib(ptr, size));
+	else if (header->magic == FT_ARMAG)
+		return (parse_archive(ptr, size));
 	else
 	{
 		ft_printf("Binary file not supported.\n");
