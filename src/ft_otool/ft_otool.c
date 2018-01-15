@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 13:27:03 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:04:07 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,11 @@ int				usage(char *name)
 	return (EXIT_FAILURE);
 }
 
-void			otool_handle_lib(void *ptr)
-{
-	(void)ptr;
-	ft_printf("Here\n");
-	ft_printf(":: %s\n", ((uint8_t *)ptr + 68));
-}
-
 static void		ft_otool(void *ptr, char *name)
 {
 	uint32_t	magic_number;
 
-	magic_number = *(uint32_t*)ptr;
+	magic_number = *(uint32_t *)ptr;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
 		otool_handle_64(ptr, name);
@@ -49,8 +42,8 @@ static void		ft_otool(void *ptr, char *name)
 	{
 		otool_handle_fat(ptr, name);
 	}
-	else if (magic_number == RANLIB)
-		otool_handle_lib(ptr); // TODO handle lib
+	else if (magic_number == FT_ARMAG)
+		otool_handle_archive(ptr, name); // TODO handle lib
 	else
 		error("The file was not recognized as a valid object file\n");
 }

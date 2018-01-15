@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 16:05:13 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 19:00:36 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 18:06:25 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,11 @@ void			otool_handle_64(void *ptr, char *name)
 		if (lc->cmd == LC_SEGMENT_64)
 		{
 			segc = (struct segment_command_64 *)lc;
-			if (ft_strcmp(segc->segname, SEG_TEXT) == 0)
-			{
+			//if (ft_strcmp(segc->segname, SEG_TEXT) == 0 || 1)
+		//	{
 				output_64(ptr, name, segc);
 				break ;
-			}
+		//	}
 		}
 		lc = (struct load_command *)((uint8_t *)lc + lc->cmdsize);
 		++i;
