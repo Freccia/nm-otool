@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:51:54 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:50:03 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 19:02:35 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 # define SWAP_SHORT(a)	(((a & 0xff) << 8) | ((unsigned short)(a) >> 8))
 
-# define SWAP_INT_O(a)	(| ((a) >> 8) & 0x0000ff00) | ((unsigned int)(a) >> 24)
+# define SWAP_INT_O(a)	| (((a) >> 8) & 0x0000ff00) | ((unsigned int)(a) >> 24)
 # define SWAP_INT(a)	(((a) << 24) | (((a) << 8) & 0x00ff0000) SWAP_INT_O(a) )
 
 typedef struct s_archive	t_archive;
