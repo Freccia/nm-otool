@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools.c                                            :+:      :+:    :+:   */
+/*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/07 20:42:08 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 19:30:00 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 11:14:40 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static char	get_symbol_type_sect(uint16_t n_sect, t_sections sects)
 	return ('S');
 }
 
-char		get_symbol_type(uint8_t n_type, uint16_t n_sect, t_sections sects)
+static char	get_symbol_type(uint8_t n_type, uint16_t n_sect, t_sections sects)
 {
 	char	ret;
 

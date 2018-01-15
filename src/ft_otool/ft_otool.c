@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 19:03:23 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 12:20:07 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ int				main(int ac, char **av)
 	if ((ptr = mmap(0, buf.st_size, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0))
 			== MAP_FAILED)
 		return (error("mmap failed"));
-//	if (ft_otool_parse(ptr, buf.st_size))
-//		return (error("The file was not recognized as a valid object file\n"));
+	if (ft_parse_binary(ptr, buf.st_size))
+		return (error("The file was not recognized as a valid object file\n"));
 	ft_otool(ptr, ac >= 2 ? av[1] : "a.out");
 	if (munmap(ptr, buf.st_size) < 0)
 		return (error("munmap failed"));

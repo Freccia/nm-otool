@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:51:54 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 18:55:10 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 12:19:40 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@
 /*
 **	PARSE
 */
-int			ft_nm_parse(void *ptr, size_t size);
+int			ft_parse_binary(void *ptr, size_t size);
+int			parse_load_commands(size_t size, uint32_t ncmds,
+		struct load_command *lc);
 
 /*
 **	SWAP
