@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 12:20:07 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 13:27:03 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int				usage(char *name)
 void			otool_handle_lib(void *ptr)
 {
 	(void)ptr;
+	ft_printf("Here\n");
+	ft_printf(":: %s\n", ((uint8_t *)ptr + 68));
 }
 
 static void		ft_otool(void *ptr, char *name)
@@ -47,7 +49,7 @@ static void		ft_otool(void *ptr, char *name)
 	{
 		otool_handle_fat(ptr, name);
 	}
-	else if (*(uint64_t*)ptr == RANLIB)
+	else if (magic_number == RANLIB)
 		otool_handle_lib(ptr); // TODO handle lib
 	else
 		error("The file was not recognized as a valid object file\n");

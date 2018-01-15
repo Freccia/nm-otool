@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/10 20:04:20 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 12:19:29 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/15 13:24:41 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,16 @@ static int	parse_fat(void *ptr, size_t size)
 	return (EXIT_SUCCESS);
 }
 
+static int	ft_parse_ranlib(void *ptr, size_t size)
+{
+	size_t		tot;
+
+	tot = 0;
+	(void)ptr;
+	(void)size;
+	return (0);
+}
+
 int			ft_parse_binary(void *ptr, size_t size)
 {
 	struct mach_header		*header;
@@ -65,9 +75,16 @@ int			ft_parse_binary(void *ptr, size_t size)
 
 	header = (struct mach_header *)ptr;
 	lc = ptr + sizeof(*header);
-	if (header->magic == FAT_MAGIC || header->magic == FAT_CIGAM)
+	if (SUPPORTED_FAT(header->magic))
 		return (parse_fat(ptr, size));
-	if (parse_load_commands(size, header->ncmds, lc))
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+	if (SUPPORTED_ARCH(header->magic))
+		return (parse_load_commands(size, header->ncmds, lc));
+	else if (header->magic == RANLIB)
+		return (ft_parse_ranlib(ptr, size));
+	else
+	{
+		ft_printf("Binary file not supported.\n");
+		return (EXIT_SUCCESS);
+	}
+	return (EXIT_FAILURE);
 }
