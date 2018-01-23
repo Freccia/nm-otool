@@ -6,52 +6,40 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:53:21 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 16:35:42 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-int				error(char *str)
-{
-	ft_printfd(2, "%s\n", str);
-	return (EXIT_FAILURE);
-}
-
-int				usage(char *name)
-{
-	ft_printfd(2, "Usage: %s /path/to/binary\n", name);
-	return (EXIT_FAILURE);
-}
-
-static void		ft_nm_bis(void *ptr, char *name)
+static void		ft_nm_bis(void *ptr, char *name, int options)
 {
 	uint32_t	magic_number;
 
 	magic_number = *(uint32_t*)ptr;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
-		nm_handle_64(ptr);
+		nm_handle_64(ptr, options);
 	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
-		nm_handle_32(ptr);
+		nm_handle_32(ptr, options);
 	}
 	else if (magic_number == FAT_MAGIC_64 || magic_number == FAT_CIGAM_64)
 	{
-		nm_handle_fat(ptr);
+		nm_handle_fat(ptr, options);
 	}
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
-		nm_handle_fat(ptr);
+		nm_handle_fat(ptr, options);
 	}
 	else if (magic_number == FT_ARMAG)
-		nm_handle_archive(ptr, name);
+		nm_handle_archive(ptr, name, options);
 	else
 		error("The file was not recognized as a valid object file\n");
 }
 
-static int		ft_nm(char *name, int8_t multi_arg)
+static int		ft_nm(char *name, int options)
 {
 	int			fd;
 	struct stat	buf;
@@ -72,21 +60,44 @@ static int		ft_nm(char *name, int8_t multi_arg)
 		return (error("mmap failed"));
 	if (ft_parse_binary(ptr, buf.st_size))
 		return (error("The file was not recognized as a valid object file\n"));
-	if (multi_arg)
+	if (options == 1)
 		ft_printf("\n%s:\n", name);
-	ft_nm_bis(ptr, name);
+	ft_nm_bis(ptr, name, options);
 	if (munmap(ptr, buf.st_size) < 0 || close(fd) < 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
+static int		parse_options(int *opt, char *arg)
+{
+	size_t	i;
+
+	i = 0;
+	if (arg && arg[0] == '-')
+	{
+		while (i < ft_strlen(arg))
+		{
+			if (arg[i] == 'n')
+			{
+				*opt = *opt | SORT_BY_NUM;
+				ft_printf("arg: %s\n", arg);
+				return (EXIT_SUCCESS);
+			}
+			++i;
+		}
+	}
+	return (EXIT_FAILURE);
+}
+
 int				main(int ac, char **av)
 {
 	int			i;
+	int			opt;
 	int			ret;
 	struct stat	buf;
 
 	i = 1;
+	opt = 0;
 	ret = EXIT_SUCCESS;
 	if (ac < 2)
 	{
@@ -96,9 +107,12 @@ int				main(int ac, char **av)
 	}
 	else
 	{
+		while (i < ac && parse_options(&opt, av[i]) == EXIT_SUCCESS)
+			++i;
 		while (i < ac)
 		{
-			if (ft_nm(av[i], ac > 2 ? 1 : 0) == EXIT_FAILURE)
+			ft_printf("OPT: %d\n", opt);
+			if (ft_nm(av[i], ac > 2 ? opt & 1 : opt) == EXIT_FAILURE)
 				ret = EXIT_FAILURE;
 			++i;
 		}

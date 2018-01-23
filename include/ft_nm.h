@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:14:54 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 16:17:15 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <errno.h>
 
 # define RADR	"radr://"
+
+# define SORT_BY_NUM	2
 
 typedef struct s_strtab		t_strtab;
 typedef struct s_sections	t_sections;
@@ -47,10 +49,10 @@ struct		s_strtab
 	uint64_t		value;
 };
 
-int			nm_handle_32(void *ptr);
-int			nm_handle_64(void *ptr);
-int			nm_handle_fat(void *ptr);
-int			nm_handle_archive(void *ptr, char *name);
+int			nm_handle_32(void *ptr, int options);
+int			nm_handle_64(void *ptr, int options);
+int			nm_handle_fat(void *ptr, int options);
+int			nm_handle_archive(void *ptr, char *name, int options);
 
 /*
 **	SECTIONS
@@ -64,7 +66,7 @@ void		fill_sections_32(t_sections *sects, struct load_command *lc,
 **	LIST
 */
 int			list_push(t_strtab **slist, struct nlist_64 *symtab, char *strtab);
-void		insertion_sort(t_strtab **slist);
+void		insertion_sort(t_strtab **slist, int options);
 void		free_list(t_strtab *slist);
 
 /*

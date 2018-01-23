@@ -6,23 +6,11 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:54:13 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 16:26:41 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
-
-int				error(char *str)
-{
-	ft_printfd(2, "%s\n", str);
-	return (EXIT_FAILURE);
-}
-
-int				usage(char *name)
-{
-	ft_printfd(2, "Usage: %s /path/to/binary\n", name);
-	return (EXIT_FAILURE);
-}
 
 static void		ft_otool_bis(void *ptr, char *name)
 {

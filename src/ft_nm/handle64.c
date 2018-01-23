@@ -6,14 +6,14 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:40:37 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 19:00:09 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 16:13:05 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
 static int		output_64(struct symtab_command *symc, void *ptr,
-		t_sections sects)
+		t_sections sects, int options)
 {
 	t_strtab		*slist;
 	struct nlist_64	*symtab;
@@ -33,13 +33,13 @@ static int		output_64(struct symtab_command *symc, void *ptr,
 		}
 		++i;
 	}
-	insertion_sort(&slist);
+	insertion_sort(&slist, options);
 	print_list_64(slist, sects);
 	free_list(slist);
 	return (EXIT_SUCCESS);
 }
 
-int				nm_handle_64(void *ptr)
+int				nm_handle_64(void *ptr, int options)
 {
 	struct mach_header_64	*header;
 	struct load_command		*lc;
@@ -57,7 +57,7 @@ int				nm_handle_64(void *ptr)
 		if (lc->cmd == LC_SYMTAB)
 		{
 			symc = (struct symtab_command *)lc;
-			if (output_64(symc, ptr, sects) == EXIT_FAILURE)
+			if (output_64(symc, ptr, sects, options) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 			break ;
 		}

@@ -6,7 +6,7 @@
 #    By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/04 15:18:12 by lfabbro           #+#    #+#              #
-#    Updated: 2018/01/15 19:08:41 by lfabbro          ###   ########.fr        #
+#    Updated: 2018/01/23 16:03:47 by lfabbro          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ NAME		= $(FT_NM) $(FT_OTOOL)
 SRC_NM		= ft_nm.c handle32.c handle64.c handle_fat.c handle_archive.c\
 			  list.c print.c sections.c
 SRC_OT		= ft_otool.c handle32.c handle64.c handle_fat.c handle_archive.c
-SRC_COMMON	= parse.c parse_archive.c parse_struct.c swap.c
+SRC_COMMON	= utils.c parse.c parse_archive.c parse_struct.c swap.c
 
 SRC_DIR		= src
 OBJ_DIR		= obj

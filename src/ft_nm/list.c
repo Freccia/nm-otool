@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:23:17 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 20:55:26 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 16:36:25 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,27 @@ int			list_push(t_strtab **slist, struct nlist_64 *symtab, char *strtab)
 	return (EXIT_SUCCESS);
 }
 
-static void	sorted_insert(t_strtab **slist, t_strtab *new)
+static void	sorted_insert_by_number(t_strtab **slist, t_strtab *new)
+{
+	t_strtab	*ptr;
+
+	ft_printf("NUMBER\n");
+	if (*slist == NULL || new->value >= (*slist)->value)
+	{
+		new->next = *slist;
+		*slist = new;
+	}
+	else
+	{
+		ptr = *slist;
+		while (ptr->next && new->value < (*slist)->value)
+			ptr = ptr->next;
+		new->next = ptr->next;
+		ptr->next = new;
+	}
+}
+
+static void	sorted_insert_by_name(t_strtab **slist, t_strtab *new)
 {
 	t_strtab	*ptr;
 
@@ -76,7 +96,7 @@ static void	sorted_insert(t_strtab **slist, t_strtab *new)
 	}
 }
 
-void		insertion_sort(t_strtab **slist)
+void		insertion_sort(t_strtab **slist, int options)
 {
 	t_strtab	*sorted;
 	t_strtab	*ptr;
@@ -87,7 +107,10 @@ void		insertion_sort(t_strtab **slist)
 	while (ptr)
 	{
 		tmp = ptr->next;
-		sorted_insert(&sorted, ptr);
+		if (options & SORT_BY_NUM)
+			sorted_insert_by_number(&sorted, ptr);
+		else
+			sorted_insert_by_name(&sorted, ptr);
 		ptr = tmp;
 	}
 	*slist = sorted;
