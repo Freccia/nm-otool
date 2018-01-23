@@ -6,13 +6,13 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 19:05:55 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:59:43 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:20:31 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static void		ft_nm_archive(void *ptr)
+static void		ft_nm_archive(void *ptr, char *name)
 {
 	uint32_t	magic_number;
 
@@ -28,7 +28,7 @@ static void		ft_nm_archive(void *ptr)
 	else if (magic_number == FAT_MAGIC_64 || magic_number == FAT_CIGAM_64 ||
 			magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
-		nm_handle_fat(ptr);
+		nm_handle_fat(ptr, name);
 	}
 	else
 		error("The file was not recognized as a valid object file\n");
@@ -66,7 +66,7 @@ static void		nm_handle_archive_bis(void *ptr, char *name, t_archive ar,
 			if ((obj_name = object_name(name, obj_name)) == NULL)
 				return ;
 			ft_printf("%s\n", obj_name);
-			ft_nm_archive(((void *)ar.ar_obj + q.off));
+			ft_nm_archive(((void *)ar.ar_obj + q.off), name);
 			q.tmp = ar.symtab[q.i];
 			free(obj_name);
 		}

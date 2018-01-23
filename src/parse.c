@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/10 20:04:20 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:25:12 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:13:36 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ static int	parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
 
 	mach_header = (void *)ptr + arch_ptr->offset;
 	lc = (void*)mach_header + sizeof(*mach_header);
+	if (mach_header->magic == FT_ARMAG)
+		return (parse_archive(mach_header, size - arch_ptr->offset));
 	if (arch_ptr->cputype == CPU_TYPE_I386 &&
 			parse_load_commands(size, mach_header->ncmds, lc))
 		return (EXIT_FAILURE);

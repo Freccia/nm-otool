@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:47:21 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:00:28 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:19:31 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,19 @@ static void		put_not_handled(cpu_type_t cputype)
 static int		has_64(void *ptr, char *name, struct fat_header *header,
 		struct fat_arch *arch_ptr)
 {
-	uint32_t	i;
+	struct mach_header	*mach_header;
+	uint32_t			i;
 
 	i = 0;
 	while (i < header->nfat_arch)
 	{
 		if (arch_ptr->cputype == CPU_TYPE_X86_64)
 		{
-			otool_handle_64((void *)ptr + arch_ptr->offset, name);
+			mach_header = (void *)ptr + arch_ptr->offset;
+			if (mach_header->magic == FT_ARMAG)
+				nm_handle_archive(mach_header, name);
+			else
+				otool_handle_64(mach_header, name);
 			return (1);
 		}
 		arch_ptr = (struct fat_arch *)((char *)arch_ptr + sizeof(*arch_ptr));

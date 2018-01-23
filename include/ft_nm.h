@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:14:54 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:10:52 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ struct		s_strtab
 
 int			nm_handle_32(void *ptr);
 int			nm_handle_64(void *ptr);
-int			nm_handle_fat(void *ptr);
+int			nm_handle_fat(void *ptr, char *name);
 int			nm_handle_archive(void *ptr, char *name);
 
 /*
