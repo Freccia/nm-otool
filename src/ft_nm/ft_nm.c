@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:42:08 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:53:21 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void		ft_nm_bis(void *ptr, char *name)
 		error("The file was not recognized as a valid object file\n");
 }
 
-static int		ft_nm(char *name)
+static int		ft_nm(char *name, int8_t multi_arg)
 {
 	int			fd;
 	struct stat	buf;
@@ -72,10 +72,10 @@ static int		ft_nm(char *name)
 		return (error("mmap failed"));
 	if (ft_parse_binary(ptr, buf.st_size))
 		return (error("The file was not recognized as a valid object file\n"));
+	if (multi_arg)
+		ft_printf("\n%s:\n", name);
 	ft_nm_bis(ptr, name);
-	if (munmap(ptr, buf.st_size) < 0)
-		return (error("munmap failed"));
-	if (close(fd) < 0)
+	if (munmap(ptr, buf.st_size) < 0 || close(fd) < 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
@@ -92,13 +92,13 @@ int				main(int ac, char **av)
 	{
 		if (stat("a.out", &buf) < 0)
 			return (usage(av[0]));
-		ft_nm("a.out");
+		ft_nm("a.out", 0);
 	}
 	else
 	{
 		while (i < ac)
 		{
-			if (ft_nm(av[i]) == EXIT_FAILURE)
+			if (ft_nm(av[i], ac > 2 ? 1 : 0) == EXIT_FAILURE)
 				ret = EXIT_FAILURE;
 			++i;
 		}

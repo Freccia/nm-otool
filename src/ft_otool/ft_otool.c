@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:42:04 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:54:13 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,7 @@ static int		ft_otool(char *name)
 	if (ft_parse_binary(ptr, buf.st_size))
 		return (error("The file was not recognized as a valid object file\n"));
 	ft_otool_bis(ptr, name);
-	if (munmap(ptr, buf.st_size) < 0)
-		return (error("munmap failed"));
-	if (close(fd) < 0)
+	if (munmap(ptr, buf.st_size) < 0 || close(fd) < 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
