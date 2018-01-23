@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:33:14 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:42:04 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int		ft_otool(char *name)
 	struct stat	buf;
 	char		*ptr;
 
-	if((fd = open(name, O_RDONLY)) < 0)
+	if ((fd = open(name, O_RDONLY)) < 0)
 	{
 		if (errno == EACCES)
 			return (error("Permission denied"));

@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:31:30 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:42:08 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int		ft_nm(char *name)
 	struct stat	buf;
 	char		*ptr;
 
-	if((fd = open(name, O_RDONLY)) < 0)
+	if ((fd = open(name, O_RDONLY)) < 0)
 	{
 		if (errno == EACCES)
 			return (error("Permission denied"));

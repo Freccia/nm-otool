@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/07 20:42:08 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:57:30 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:42:32 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static char	get_symbol_type(uint8_t n_type, uint16_t n_sect, uint16_t n_value,
 		ret = 'A';
 	else if ((n_type & N_TYPE) == N_INDR)
 		ret = 'I';
-	//if ((n_type & N_PEXT) || !(n_type & N_EXT))
 	if (!(n_type & N_EXT))
 		ret = ft_tolower(ret);
 	return (ret);
