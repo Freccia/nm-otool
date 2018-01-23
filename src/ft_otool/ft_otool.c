@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:54:01 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/23 15:33:14 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int				usage(char *name)
 	return (EXIT_FAILURE);
 }
 
-static void		ft_otool(void *ptr, char *name)
+static void		ft_otool_bis(void *ptr, char *name)
 {
 	uint32_t	magic_number;
 
@@ -48,15 +48,13 @@ static void		ft_otool(void *ptr, char *name)
 		error("The file was not recognized as a valid object file\n");
 }
 
-int				main(int ac, char **av)
+static int		ft_otool(char *name)
 {
 	int			fd;
-	char		*ptr;
 	struct stat	buf;
+	char		*ptr;
 
-	if (ac < 2 && (fd = open("a.out", O_RDONLY)) < 0)
-		return (usage(av[0]));
-	else if (ac >= 2 && (fd = open(av[1], O_RDONLY)) < 0)
+	if((fd = open(name, O_RDONLY)) < 0)
 	{
 		if (errno == EACCES)
 			return (error("Permission denied"));
@@ -71,8 +69,36 @@ int				main(int ac, char **av)
 		return (error("mmap failed"));
 	if (ft_parse_binary(ptr, buf.st_size))
 		return (error("The file was not recognized as a valid object file\n"));
-	ft_otool(ptr, ac >= 2 ? av[1] : "a.out");
+	ft_otool_bis(ptr, name);
 	if (munmap(ptr, buf.st_size) < 0)
 		return (error("munmap failed"));
+	if (close(fd) < 0)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
+}
+
+int				main(int ac, char **av)
+{
+	int			i;
+	int			ret;
+	struct stat	buf;
+
+	i = 1;
+	ret = EXIT_SUCCESS;
+	if (ac < 2)
+	{
+		if (stat("a.out", &buf) < 0)
+			return (usage(av[0]));
+		ft_otool("a.out");
+	}
+	else
+	{
+		while (i < ac)
+		{
+			if (ft_otool(av[i]) == EXIT_FAILURE)
+				ret = EXIT_FAILURE;
+			++i;
+		}
+	}
+	return (ret);
 }
