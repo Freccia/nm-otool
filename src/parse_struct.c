@@ -6,22 +6,43 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 11:20:47 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:32:27 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/26 18:49:13 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static int		parse_symtab_command(size_t size,
+int			check_strtab_size(size_t size, struct nlist_64 *symtab, char *strtab,
+		uint32_t strtab_size)
+{
+	char		*str;
+	uint32_t	i;
+
+	if (symtab->n_un.n_strx > size)
+		return (EXIT_FAILURE);
+	str = strtab + symtab->n_un.n_strx;
+	i = 0;
+	size = strtab_size;
+	strtab_size = size;
+	return (EXIT_SUCCESS);
+}
+
+static int		parse_symtab_command(void *ptr, size_t size,
 		struct symtab_command *symc, size_t tot)
 {
+	struct nlist_64	*symtab;
+	char			*strtab;
 	int				i;
 
-	if (symc->stroff > size)
+	if (symc->symoff > size || symc->stroff > size)
 		return (EXIT_FAILURE);
+	symtab = (struct nlist_64 *)((char *)ptr + symc->symoff);
+	strtab = (char *)ptr + symc->stroff;
 	i = 0;
 	while (i < (int)symc->nsyms)
-	{
+	{	
+		if (check_strtab_size(size, &symtab[i], strtab, symc->strsize))
+			return (EXIT_FAILURE);
 		tot += sizeof(struct nlist_64);
 		if (tot > size)
 			return (EXIT_FAILURE);
@@ -72,7 +93,7 @@ static int		parse_segment_command_64(size_t size,
 	return (EXIT_SUCCESS);
 }
 
-static int		parse_load_commands_bis(size_t size,
+static int		parse_load_commands_bis(void *ptr, size_t size,
 		struct load_command *lc, size_t tot)
 {
 	struct segment_command_64	*segc64;
@@ -82,7 +103,7 @@ static int		parse_load_commands_bis(size_t size,
 	if (lc->cmd == LC_SYMTAB)
 	{
 		symc = (struct symtab_command *)lc;
-		if (parse_symtab_command(size, symc, tot))
+		if (parse_symtab_command(ptr, size, symc, tot))
 			return (EXIT_FAILURE);
 	}
 	else if (lc->cmd == LC_SEGMENT)
@@ -100,19 +121,17 @@ static int		parse_load_commands_bis(size_t size,
 	return (EXIT_SUCCESS);
 }
 
-int				parse_load_commands(size_t size, uint32_t ncmds,
+int				parse_load_commands(void *ptr, size_t size, uint32_t ncmds,
 		struct load_command *lc)
 {
-	void		*ptr;
 	size_t		tot;
 	uint32_t	i;
 
-	ptr = NULL;
 	tot = 0;
 	i = 0;
 	while (i < ncmds)
 	{
-		if (parse_load_commands_bis(size, lc, tot))
+		if (parse_load_commands_bis(ptr, size, lc, tot))
 			return (EXIT_FAILURE);
 		tot += (size_t)lc->cmdsize;
 		if (tot > size)

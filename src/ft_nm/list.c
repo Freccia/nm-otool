@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/06 18:23:17 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/10 20:55:26 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/26 17:34:34 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,14 @@ void		free_list(t_strtab *slist)
 
 static int	list_skip(struct nlist_64 *symtab, char *strtab)
 {
-	if (ft_strncmp(RADR, strtab + symtab->n_un.n_strx, ft_strlen(RADR)) == 0)
+	char	*str;
+	size_t	str_len;
+	size_t	radr_len;
+
+	str = strtab + symtab->n_un.n_strx;
+	str_len = ft_strlen(str);
+	radr_len = ft_strlen(RADR);
+	if (ft_strncmp(RADR, str, (radr_len < str_len) ? radr_len : str_len) == 0)
 		return (1);
 	if (symtab->n_type & N_STAB)
 		return (1);

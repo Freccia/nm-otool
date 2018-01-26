@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 17:09:05 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:14:51 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/26 18:52:46 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	ft_parse_binary_archive(void *ptr, size_t size)
 	if (SUPPORTED_FAT(header->magic))
 		return (parse_fat(ptr, size));
 	if (SUPPORTED_ARCH(header->magic))
-		return (parse_load_commands(size, header->ncmds, lc));
+		return (parse_load_commands(ptr, size, header->ncmds, lc));
 	else if (header->magic == FT_ARMAG)
 	{
 		ft_printf("Binary error.");

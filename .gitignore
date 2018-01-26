@@ -8,8 +8,7 @@ test
 
 # Vim Swap Files
 .*.sw*
-.swo
-.swp
+.sw*
 
 # Object files
 *.o

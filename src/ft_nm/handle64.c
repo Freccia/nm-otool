@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/04 17:40:37 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/12 19:00:09 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/26 18:05:01 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int				nm_handle_64(void *ptr)
 	fill_sections_64(&sects, lc, header->ncmds);
 	while (i < header->ncmds)
 	{
+		ft_printf("LC: %d   %p\n", lc->cmd, lc);
 		if (lc->cmd == LC_SYMTAB)
 		{
 			symc = (struct symtab_command *)lc;

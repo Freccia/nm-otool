@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:51:54 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:02:35 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/26 16:04:38 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ struct				s_quad
 int					ft_parse_binary(void *ptr, size_t size);
 int					parse_fat(void *ptr, size_t size);
 int					parse_archive(void *ptr, size_t size);
-int					parse_load_commands(size_t size, uint32_t ncmds,
+int					parse_load_commands(void *ptr, size_t size, uint32_t ncmds,
 		struct load_command *lc);
 
 int					get_object_offset(struct ar_hdr *ar);
