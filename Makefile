@@ -6,7 +6,7 @@
 #    By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/04 15:18:12 by lfabbro           #+#    #+#              #
-#    Updated: 2018/01/15 19:08:41 by lfabbro          ###   ########.fr        #
+#    Updated: 2018/01/23 16:48:57 by lfabbro          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ INC_DIR		= include libft/include libft/libft
 LIB_DIR		= libft
 
 CC			= clang
-CFLAGS		= -Wall -Wextra -Werror -g
+CFLAGS		+= -Wall -Wextra -Werror -g
 INC			= $(addprefix -I./,$(INC_DIR))
 LIB			= $(addprefix -L./,$(LIB_DIR))
 LIB			+= -lft
@@ -52,7 +52,7 @@ ENDC		= \033[0m
 
 .PHONY:	all clean fclean re lib libclean libre norme
 
-all: $(FT_NM) $(FT_OTOOL)
+all: lib $(FT_NM) $(FT_OTOOL)
 
 $(FT_NM): $(OBJ_FILES_COMMON) $(OBJ_FILES_NM)
 	$(CC) $(CFLAGS) $(INC) $^ -o $@ $(LIB)
@@ -72,7 +72,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR) $(OBJ_DIR_NM) $(OBJ_DIR_OT)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-clean:
+clean: libclean
 	@printf "$(WHITE) [ $()CLEAN $(WHITE)]$(ENDC)\n"
 	@rm -fvr $(OBJ_DIR) $(FT_NM).dSYM $(FT_OTOOL).dSYM
 
@@ -80,7 +80,7 @@ fclean: clean
 	@printf "$(WHITE) [ $(RED)FCLEAN $(WHITE)]$(ENDC)\n"
 	@rm -fv $(FT_NM) $(FT_OTOOL)
 
-re: fclean all
+re: libre fclean all
 
 lib:
 	@make -C $(LIB_DIR)
