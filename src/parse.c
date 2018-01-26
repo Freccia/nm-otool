@@ -6,25 +6,51 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/10 20:04:20 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 18:25:12 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/26 19:02:37 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
+static int	parse_binary_64(void *ptr, size_t size)
+{
+	struct mach_header_64	*header;
+	struct load_command		*lc;
+
+	header = (struct mach_header_64*)ptr;
+	lc = ptr + sizeof(*header);
+	return (parse_load_commands(size, header->ncmds, lc));
+}
+
+static int	parse_binary_32(void *ptr, size_t size)
+{
+	struct mach_header		*header;
+	struct load_command		*lc;
+
+	header = (struct mach_header*)ptr;
+	lc = ptr + sizeof(*header);
+	return (parse_load_commands(size, header->ncmds, lc));
+}
+
 static int	parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
 {
 	struct mach_header	*mach_header;
-	struct load_command *lc;
+	//struct load_command *lc;
 
 	mach_header = (void *)ptr + arch_ptr->offset;
-	lc = (void*)mach_header + sizeof(*mach_header);
+	//lc = (void*)mach_header + sizeof(*mach_header);
+	if (mach_header->magic == MH_MAGIC || mach_header->magic == MH_CIGAM)
+		return (parse_binary_64(ptr, size));
+	if (mach_header->magic == MH_MAGIC_64 || mach_header->magic == MH_CIGAM_64)
+		return (parse_binary_32(ptr, size));
+	/*
 	if (arch_ptr->cputype == CPU_TYPE_I386 &&
 			parse_load_commands(size, mach_header->ncmds, lc))
 		return (EXIT_FAILURE);
 	if (arch_ptr->cputype == CPU_TYPE_X86_64 &&
 			parse_load_commands(size, mach_header->ncmds, lc))
 		return (EXIT_FAILURE);
+		*/
 	return (EXIT_SUCCESS);
 }
 
@@ -60,14 +86,14 @@ int			parse_fat(void *ptr, size_t size)
 int			ft_parse_binary(void *ptr, size_t size)
 {
 	struct mach_header		*header;
-	struct load_command		*lc;
 
 	header = (struct mach_header *)ptr;
-	lc = ptr + sizeof(*header);
 	if (SUPPORTED_FAT(header->magic))
 		return (parse_fat(ptr, size));
-	if (SUPPORTED_ARCH(header->magic))
-		return (parse_load_commands(size, header->ncmds, lc));
+	if (header->magic == MH_MAGIC || header->magic == MH_CIGAM)
+		return (parse_binary_64(ptr, size));
+	if (header->magic == MH_MAGIC_64 || header->magic == MH_CIGAM_64)
+		return (parse_binary_32(ptr, size));
 	else if (header->magic == FT_ARMAG)
 		return (parse_archive(ptr, size));
 	else
