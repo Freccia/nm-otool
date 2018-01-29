@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:31:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/29 17:58:06 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 18:04:20 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,6 @@
 typedef struct s_options	t_options;
 typedef struct s_strtab		t_strtab;
 typedef struct s_sections	t_sections;
-typedef struct s_quad		t_quad;
-
-struct		s_quad
-{
-	uint32_t		i;
-	uint32_t		tot;
-	uint32_t		off;
-	uint32_t		tmp;
-};
 
 struct		s_options
 {
