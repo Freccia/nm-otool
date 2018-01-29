@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/29 17:32:05 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 18:26:14 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,18 @@ static int		ft_nm(char *name, int8_t multi_arg, t_options opt)
 int				main(int ac, char **av)
 {
 	int			i;
+	int			fd;
 	int			ret;
 	t_options	opt;
-	struct stat	buf;
 
 	if ((i = get_options(ac, av, &opt)) == -1)
 		return (usage_nm(av[0]));
 	ret = EXIT_SUCCESS;
 	if (ac < 2)
 	{
-		if (stat("a.out", &buf) < 0)
+		if ((fd = open("a.out", O_RDONLY)) < 0)
 			return (usage_nm(av[0]));
+		close(fd);
 		ft_nm("a.out", 0, opt);
 	}
 	else

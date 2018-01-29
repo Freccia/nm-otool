@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:54:13 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 18:26:45 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,15 @@ int				main(int ac, char **av)
 {
 	int			i;
 	int			ret;
-	struct stat	buf;
+	int			fd;
 
 	i = 1;
 	ret = EXIT_SUCCESS;
 	if (ac < 2)
 	{
-		if (stat("a.out", &buf) < 0)
-			return (usage_otool(av[0]));
+		if ((fd = open("a.out", O_RDONLY)) < 0)
+			return (usage_nm(av[0]));
+		close(fd);
 		ft_otool("a.out");
 	}
 	else
