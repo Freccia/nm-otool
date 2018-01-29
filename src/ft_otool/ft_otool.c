@@ -12,18 +12,6 @@
 
 #include "ft_otool.h"
 
-int				error(char *str)
-{
-	ft_printfd(2, "%s\n", str);
-	return (EXIT_FAILURE);
-}
-
-int				usage(char *name)
-{
-	ft_printfd(2, "Usage: %s /path/to/binary\n", name);
-	return (EXIT_FAILURE);
-}
-
 static void		ft_otool_bis(void *ptr, char *name)
 {
 	uint32_t	magic_number;
@@ -86,7 +74,7 @@ int				main(int ac, char **av)
 	if (ac < 2)
 	{
 		if (stat("a.out", &buf) < 0)
-			return (usage(av[0]));
+			return (usage_otool(av[0]));
 		ft_otool("a.out");
 	}
 	else

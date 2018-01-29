@@ -13,6 +13,8 @@
 #ifndef FT_COMMON_H
 # define FT_COMMON_H
 
+# include "libft.h"
+
 # include <sys/mman.h>
 # include <mach-o/loader.h>
 # include <mach-o/fat.h>
@@ -78,6 +80,11 @@ void				swap_fat_arch(struct fat_arch *fat_archs,
 void				swap_fat(struct fat_header *fat_header,
 		struct fat_arch *fat_archs);
 
+/*
+**	UTILS
+*/
 int					error(char *str);
+int					usage_otool(char *name);
+int					usage_nm(char *name);
 
 #endif

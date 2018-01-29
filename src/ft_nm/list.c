@@ -53,6 +53,7 @@ int			list_push(t_strtab **slist, struct nlist_64 *symtab, char *strtab)
 	new->sect = symtab->n_sect;
 	new->desc = symtab->n_desc;
 	new->value = (uint64_t)symtab->n_value;
+	new->nstrx = symtab->n_un.n_strx;
 	*slist = new;
 	return (EXIT_SUCCESS);
 }

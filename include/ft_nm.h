@@ -13,7 +13,6 @@
 #ifndef FT_NM_H
 # define FT_NM_H
 
-# include "libft.h"
 # include "ft_common.h"
 
 # include <sys/mman.h>
@@ -26,8 +25,20 @@
 
 # define RADR	"radr://"
 
+# define OPT_G		1
+# define OPT_UL		2
+# define OPT_UU		4
+# define OPT_X		8
+# define OPT_J		16
+
+typedef struct s_options	t_options;
 typedef struct s_strtab		t_strtab;
 typedef struct s_sections	t_sections;
+
+struct		s_options
+{
+	uint32_t		opt;
+};
 
 struct		s_sections
 {
@@ -45,12 +56,13 @@ struct		s_strtab
 	uint16_t		sect;
 	uint16_t		desc;
 	uint64_t		value;
+	uint64_t		nstrx;
 };
 
-int			nm_handle_32(void *ptr);
-int			nm_handle_64(void *ptr);
-int			nm_handle_fat(void *ptr);
-int			nm_handle_archive(void *ptr, char *name);
+int			nm_handle_32(void *ptr, t_options opt);
+int			nm_handle_64(void *ptr, t_options opt);
+int			nm_handle_fat(void *ptr, t_options opt);
+int			nm_handle_archive(void *ptr, t_options opt, char *name);
 
 /*
 **	SECTIONS
@@ -68,9 +80,14 @@ void		insertion_sort(t_strtab **slist);
 void		free_list(t_strtab *slist);
 
 /*
+**	OPTIONS
+*/
+int			get_options(int ac, char **av, t_options *opt);
+
+/*
 **	TOOLS
 */
-void		print_list_32(t_strtab *slist, t_sections sects);
-void		print_list_64(t_strtab *slist, t_sections sects);
+void		print_list_32(t_strtab *slist, t_sections sects, t_options opt);
+void		print_list_64(t_strtab *slist, t_sections sects, t_options opt);
 
 #endif

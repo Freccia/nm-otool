@@ -13,7 +13,7 @@
 #include "ft_nm.h"
 
 static int		output_32(struct symtab_command *symc, void *ptr,
-		t_sections sects)
+		t_sections sects, t_options opt)
 {
 	t_strtab		*slist;
 	struct nlist	*symtab;
@@ -35,12 +35,12 @@ static int		output_32(struct symtab_command *symc, void *ptr,
 		++i;
 	}
 	insertion_sort(&slist);
-	print_list_32(slist, sects);
+	print_list_32(slist, sects, opt);
 	free_list(slist);
 	return (EXIT_SUCCESS);
 }
 
-int				nm_handle_32(void *ptr)
+int				nm_handle_32(void *ptr, t_options opt)
 {
 	struct mach_header		*header;
 	struct load_command		*lc;
@@ -58,7 +58,7 @@ int				nm_handle_32(void *ptr)
 		if (lc->cmd == LC_SYMTAB)
 		{
 			symc = (struct symtab_command *)lc;
-			if (output_32(symc, ptr, sects) == EXIT_FAILURE)
+			if (output_32(symc, ptr, sects, opt) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 			break ;
 		}

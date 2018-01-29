@@ -17,8 +17,8 @@ static int	parse_binary_64(void *ptr, size_t size)
 	struct mach_header_64	*header;
 	struct load_command		*lc;
 
-	header = (struct mach_header_64*)ptr;
-	lc = ptr + sizeof(*header);
+	header = (struct mach_header_64 *)ptr;
+	lc = (void*)ptr + sizeof(*header);
 	return (parse_load_commands(size, header->ncmds, lc));
 }
 
@@ -40,9 +40,9 @@ static int	parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
 	mach_header = (void *)ptr + arch_ptr->offset;
 	//lc = (void*)mach_header + sizeof(*mach_header);
 	if (mach_header->magic == MH_MAGIC || mach_header->magic == MH_CIGAM)
-		return (parse_binary_64(ptr, size));
+		return (parse_binary_32(mach_header, size));
 	if (mach_header->magic == MH_MAGIC_64 || mach_header->magic == MH_CIGAM_64)
-		return (parse_binary_32(ptr, size));
+		return (parse_binary_64(mach_header, size));
 	/*
 	if (arch_ptr->cputype == CPU_TYPE_I386 &&
 			parse_load_commands(size, mach_header->ncmds, lc))
@@ -50,8 +50,9 @@ static int	parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
 	if (arch_ptr->cputype == CPU_TYPE_X86_64 &&
 			parse_load_commands(size, mach_header->ncmds, lc))
 		return (EXIT_FAILURE);
-		*/
 	return (EXIT_SUCCESS);
+	*/
+	return (EXIT_FAILURE);
 }
 
 int			parse_fat(void *ptr, size_t size)
@@ -91,15 +92,11 @@ int			ft_parse_binary(void *ptr, size_t size)
 	if (SUPPORTED_FAT(header->magic))
 		return (parse_fat(ptr, size));
 	if (header->magic == MH_MAGIC || header->magic == MH_CIGAM)
-		return (parse_binary_64(ptr, size));
-	if (header->magic == MH_MAGIC_64 || header->magic == MH_CIGAM_64)
 		return (parse_binary_32(ptr, size));
-	else if (header->magic == FT_ARMAG)
+	if (header->magic == MH_MAGIC_64 || header->magic == MH_CIGAM_64)
+		return (parse_binary_64(ptr, size));
+	if (header->magic == FT_ARMAG)
 		return (parse_archive(ptr, size));
-	else
-	{
-		ft_printf("Binary file not supported.\n");
-		return (EXIT_SUCCESS);
-	}
+	ft_printf("Binary file not supported.\n");
 	return (EXIT_FAILURE);
 }

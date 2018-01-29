@@ -16,9 +16,9 @@ FT_OTOOL	= ft_otool
 NAME		= $(FT_NM) $(FT_OTOOL)
 
 SRC_NM		= ft_nm.c handle32.c handle64.c handle_fat.c handle_archive.c\
-			  list.c print.c sections.c
+			  list.c print.c sections.c options.c
 SRC_OT		= ft_otool.c handle32.c handle64.c handle_fat.c handle_archive.c
-SRC_COMMON	= parse.c parse_archive.c parse_struct.c swap.c
+SRC_COMMON	= utils.c parse.c parse_archive.c parse_struct.c swap.c
 
 SRC_DIR		= src
 OBJ_DIR		= obj

@@ -39,7 +39,7 @@ static void		put_not_handled(cpu_type_t cputype)
 }
 
 static int		has_64(void *ptr, struct fat_header *header,
-		struct fat_arch *arch_ptr)
+		struct fat_arch *arch_ptr, t_options opt)
 {
 	uint32_t	i;
 
@@ -48,7 +48,7 @@ static int		has_64(void *ptr, struct fat_header *header,
 	{
 		if (arch_ptr->cputype == CPU_TYPE_X86_64)
 		{
-			nm_handle_64((void *)ptr + arch_ptr->offset);
+			nm_handle_64((void *)ptr + arch_ptr->offset, opt);
 			return (1);
 		}
 		arch_ptr = (struct fat_arch *)((char *)arch_ptr + sizeof(*arch_ptr));
@@ -57,7 +57,7 @@ static int		has_64(void *ptr, struct fat_header *header,
 	return (0);
 }
 
-int				nm_handle_fat(void *ptr)
+int				nm_handle_fat(void *ptr, t_options opt)
 {
 	struct fat_header		*header;
 	struct fat_arch			*arch_ptr;
@@ -68,14 +68,14 @@ int				nm_handle_fat(void *ptr)
 	arch_ptr = (struct fat_arch *)((char *)header + sizeof(*header));
 	if (should_swap_bytes_fat(header->magic))
 		swap_fat(header, arch_ptr);
-	if (has_64(ptr, header, arch_ptr) == 1)
+	if (has_64(ptr, header, arch_ptr, opt) == 1)
 		return (EXIT_SUCCESS);
 	else
 	{
 		while (i < header->nfat_arch)
 		{
 			if (arch_ptr->cputype == CPU_TYPE_I386)
-				nm_handle_32((void *)ptr + arch_ptr->offset);
+				nm_handle_32((void *)ptr + arch_ptr->offset, opt);
 			else
 				put_not_handled(arch_ptr->cputype);
 			arch_ptr = (struct fat_arch *)((char*)arch_ptr + sizeof(*arch_ptr));

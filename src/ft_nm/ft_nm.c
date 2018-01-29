@@ -12,46 +12,34 @@
 
 #include "ft_nm.h"
 
-int				error(char *str)
-{
-	ft_printfd(2, "%s\n", str);
-	return (EXIT_FAILURE);
-}
-
-int				usage(char *name)
-{
-	ft_printfd(2, "Usage: %s /path/to/binary\n", name);
-	return (EXIT_FAILURE);
-}
-
-static void		ft_nm_bis(void *ptr, char *name)
+static void		ft_nm_bis(void *ptr, char *name, t_options opt)
 {
 	uint32_t	magic_number;
 
 	magic_number = *(uint32_t*)ptr;
 	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
 	{
-		nm_handle_64(ptr);
+		nm_handle_64(ptr, opt);
 	}
 	else if (magic_number == MH_MAGIC || magic_number == MH_CIGAM)
 	{
-		nm_handle_32(ptr);
+		nm_handle_32(ptr, opt);
 	}
 	else if (magic_number == FAT_MAGIC_64 || magic_number == FAT_CIGAM_64)
 	{
-		nm_handle_fat(ptr);
+		nm_handle_fat(ptr, opt);
 	}
 	else if (magic_number == FAT_MAGIC || magic_number == FAT_CIGAM)
 	{
-		nm_handle_fat(ptr);
+		nm_handle_fat(ptr, opt);
 	}
 	else if (magic_number == FT_ARMAG)
-		nm_handle_archive(ptr, name);
+		nm_handle_archive(ptr, opt, name);
 	else
 		error("The file was not recognized as a valid object file\n");
 }
 
-static int		ft_nm(char *name, int8_t multi_arg)
+static int		ft_nm(char *name, int8_t multi_arg, t_options opt)
 {
 	int			fd;
 	struct stat	buf;
@@ -74,7 +62,7 @@ static int		ft_nm(char *name, int8_t multi_arg)
 		return (error("The file was not recognized as a valid object file\n"));
 	if (multi_arg)
 		ft_printf("\n%s:\n", name);
-	ft_nm_bis(ptr, name);
+	ft_nm_bis(ptr, name, opt);
 	if (munmap(ptr, buf.st_size) < 0 || close(fd) < 0)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
@@ -84,21 +72,23 @@ int				main(int ac, char **av)
 {
 	int			i;
 	int			ret;
+	t_options		opt;
 	struct stat	buf;
 
-	i = 1;
+	if ((i = get_options(ac, av, &opt)) == -1)
+			return (usage_nm(av[0]));
 	ret = EXIT_SUCCESS;
 	if (ac < 2)
 	{
 		if (stat("a.out", &buf) < 0)
-			return (usage(av[0]));
-		ft_nm("a.out", 0);
+			return (usage_nm(av[0]));
+		ft_nm("a.out", 0, opt);
 	}
 	else
 	{
 		while (i < ac)
 		{
-			if (ft_nm(av[i], ac > 2 ? 1 : 0) == EXIT_FAILURE)
+			if (ft_nm(av[i], ac - i > 2 ? 1 : 0, opt) == EXIT_FAILURE)
 				ret = EXIT_FAILURE;
 			++i;
 		}
