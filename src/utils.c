@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:53:21 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 17:59:18 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int				usage_nm(char *name)
 	ft_printfd(2, "		-g     Display only global (external) symbols.\n");
 	ft_printfd(2, "		-u     Display only undefined symbols.\n");
 	ft_printfd(2, "		-U     Don't display undefined symbols.\n");
-	ft_printfd(2, "		-j     Just display the symbol names (no value or type).\n");
+	ft_printfd(2,
+		"		-j     Just display the symbol names (no value or type).\n");
 	return (EXIT_FAILURE);
 }

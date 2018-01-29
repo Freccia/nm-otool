@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/07 20:42:08 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:42:32 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 17:54:52 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,18 @@ void		print_list_32(t_strtab *slist, t_sections sects, t_options opt)
 	while (ptr)
 	{
 		type = get_symbol_type(ptr->type, ptr->sect, ptr->value, sects);
-		if (type != 'U' && type != 'u' && !(opt.opt & OPT_UL))
+		if (!(opt.opt & OPT_G) || (ptr->type & N_EXT))
 		{
-				if (opt.opt & OPT_X)
-						ft_printf("%08x %x %x %x %x %c %s\n", (uint32_t)ptr->value, ptr->type, ptr->sect, ptr->desc, ptr->value, ptr->strx);
-				else
-						ft_printf("%08x %c %s\n", (uint32_t)ptr->value, type, ptr->strx);
-		}
-		else if ((opt.opt & OPT_UL) || !(opt.opt & OPT_UU))
-		{
-			ft_printf("%8c %c %s\n", ' ', type, ptr->strx);
+			if (opt.opt & OPT_X)
+				ft_printf("%08x %x %x %x %x %c %s\n", (uint32_t)ptr->value,
+						ptr->type, ptr->sect, ptr->desc, ptr->value, ptr->strx);
+			else if (opt.opt & OPT_J)
+				ft_printf("%s\n", ptr->strx);
+			else if (type != 'U' && type != 'u' && !(opt.opt & OPT_UL))
+				ft_printf("%08x %c %s\n", (uint32_t)ptr->value, type,
+						ptr->strx);
+			else if ((opt.opt & OPT_UL) || !(opt.opt & OPT_UU))
+				ft_printf("%8c %c %s\n", ' ', type, ptr->strx);
 		}
 		ptr = ptr->next;
 	}
@@ -77,34 +79,17 @@ void		print_list_64(t_strtab *slist, t_sections sects, t_options opt)
 	while (ptr)
 	{
 		type = get_symbol_type(ptr->type, ptr->sect, ptr->value, sects);
-		/*
-		if (type != 'U' && type != 'u')
-			ft_printf("%016lx %c %s\n", ptr->value, type, ptr->strx);
-		else
-			ft_printf("%16c %c %s\n", ' ', type, ptr->strx, ptr->sect);
-			*/
 		if (!(opt.opt & OPT_G) || (ptr->type & N_EXT))
 		{
-				if (type != 'U' && type != 'u' && !(opt.opt & OPT_UL))
-				{
-						if (opt.opt & OPT_X)
-								ft_printf("%016lx %02x %02x %04x %08x %s\n", ptr->value, ptr->type,
-												ptr->sect, ptr->desc, ptr->nstrx, ptr->strx);
-						else if (opt.opt & OPT_J)
-								ft_printf("%s\n", ptr->strx);
-						else
-								ft_printf("%016lx %c %s\n", ptr->value, type, ptr->strx);
-				}
-				else if ((opt.opt & OPT_UL) || !(opt.opt & OPT_UU))
-				{
-						if (opt.opt & OPT_X)
-								ft_printf("%016lx %02x %02x %04x %08x %s\n", ptr->value, ptr->type,
-												ptr->sect, ptr->desc, ptr->nstrx, ptr->strx);
-						else if (opt.opt & OPT_J)
-								ft_printf("%s\n", ptr->strx);
-						else
-								ft_printf("%16c %c %s\n", ' ', type, ptr->strx);
-				}
+			if (opt.opt & OPT_X)
+				ft_printf("%016lx %02x %02x %04x %08x %s\n", ptr->value,
+						ptr->type, ptr->sect, ptr->desc, ptr->nstrx, ptr->strx);
+			else if (opt.opt & OPT_J)
+				ft_printf("%s\n", ptr->strx);
+			else if (type != 'U' && type != 'u' && !(opt.opt & OPT_UL))
+				ft_printf("%016lx %c %s\n", ptr->value, type, ptr->strx);
+			else if ((opt.opt & OPT_UL) || !(opt.opt & OPT_UU))
+				ft_printf("%16c %c %s\n", ' ', type, ptr->strx);
 		}
 		ptr = ptr->next;
 	}

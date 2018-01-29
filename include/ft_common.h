@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:51:54 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:02:35 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 17:37:16 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,6 @@ struct				s_archive
 	uint32_t		symtab_size;
 	uint32_t		symtab_offset;
 	uint32_t		*symtab;
-};
-
-struct				s_quad
-{
-	uint32_t		i;
-	uint32_t		tot;
-	uint32_t		off;
-	uint32_t		tmp;
 };
 
 /*

@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 19:05:55 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/15 19:59:43 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 17:39:17 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,42 +50,41 @@ static char		*object_name(char *name, char *obj_name)
 }
 
 static void		nm_handle_archive_bis(void *ptr, char *name, t_archive ar,
-		t_quad q, t_options opt)
+		t_options opt)
 {
 	char			*obj_name;
 
 	obj_name = NULL;
-	while (q.tot < ar.symtab_size)
+	while (opt.q.tot < ar.symtab_size)
 	{
-		if (q.tmp != ar.symtab[q.i])
+		if (opt.q.tmp != ar.symtab[opt.q.i])
 		{
 			ft_putchar('\n');
-			ar.ar_obj = (struct ar_hdr *)(ptr + ar.symtab[q.i]);
-			q.off = get_object_offset(ar.ar_obj);
+			ar.ar_obj = (struct ar_hdr *)(ptr + ar.symtab[opt.q.i]);
+			opt.q.off = get_object_offset(ar.ar_obj);
 			obj_name = (char *)((void *)ar.ar_obj + ARCHIVE_HEADER_SIZE);
 			if ((obj_name = object_name(name, obj_name)) == NULL)
 				return ;
 			ft_printf("%s\n", obj_name);
-			ft_nm_archive(((void *)ar.ar_obj + q.off), opt);
-			q.tmp = ar.symtab[q.i];
+			ft_nm_archive(((void *)ar.ar_obj + opt.q.off), opt);
+			opt.q.tmp = ar.symtab[opt.q.i];
 			free(obj_name);
 		}
-		q.tot += sizeof(q.i) * 2;
-		q.i += 2;
+		opt.q.tot += sizeof(opt.q.i) * 2;
+		opt.q.i += 2;
 	}
 }
 
 int				nm_handle_archive(void *ptr, t_options opt, char *name)
 {
 	t_archive		ar;
-	t_quad			q;
 
 	ar.ar = (struct ar_hdr *)((uint8_t *)ptr + ARMAG_LEN);
 	ar.symtab_offset = get_object_offset(ar.ar);
 	ar.symtab_size = *(uint32_t *)(ptr + ar.symtab_offset + ARMAG_LEN);
 	ar.symtab = (uint32_t *)(ptr + ar.symtab_offset + ARMAG_LEN + sizeof(int));
-	q.tot = 0;
-	q.i = 1;
-	nm_handle_archive_bis(ptr, name, ar, q, opt);
+	opt.q.tot = 0;
+	opt.q.i = 1;
+	nm_handle_archive_bis(ptr, name, ar, opt);
 	return (EXIT_SUCCESS);
 }

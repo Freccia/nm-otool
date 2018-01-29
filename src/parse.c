@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/10 20:04:20 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/26 19:02:37 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 17:56:45 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,12 @@ static int	parse_binary_32(void *ptr, size_t size)
 static int	parse_fat_arch(void *ptr, size_t size, struct fat_arch *arch_ptr)
 {
 	struct mach_header	*mach_header;
-	//struct load_command *lc;
 
 	mach_header = (void *)ptr + arch_ptr->offset;
-	//lc = (void*)mach_header + sizeof(*mach_header);
 	if (mach_header->magic == MH_MAGIC || mach_header->magic == MH_CIGAM)
 		return (parse_binary_32(mach_header, size));
 	if (mach_header->magic == MH_MAGIC_64 || mach_header->magic == MH_CIGAM_64)
 		return (parse_binary_64(mach_header, size));
-	/*
-	if (arch_ptr->cputype == CPU_TYPE_I386 &&
-			parse_load_commands(size, mach_header->ncmds, lc))
-		return (EXIT_FAILURE);
-	if (arch_ptr->cputype == CPU_TYPE_X86_64 &&
-			parse_load_commands(size, mach_header->ncmds, lc))
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
-	*/
 	return (EXIT_FAILURE);
 }
 

@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:12 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/23 15:53:21 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/29 17:32:05 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ int				main(int ac, char **av)
 {
 	int			i;
 	int			ret;
-	t_options		opt;
+	t_options	opt;
 	struct stat	buf;
 
 	if ((i = get_options(ac, av, &opt)) == -1)
-			return (usage_nm(av[0]));
+		return (usage_nm(av[0]));
 	ret = EXIT_SUCCESS;
 	if (ac < 2)
 	{
