@@ -6,7 +6,7 @@
 /*   By: lfabbro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/21 18:04:46 by lfabbro           #+#    #+#             */
-/*   Updated: 2018/01/29 18:26:45 by lfabbro          ###   ########.fr       */
+/*   Updated: 2018/01/30 12:18:30 by lfabbro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int				main(int ac, char **av)
 	if (ac < 2)
 	{
 		if ((fd = open("a.out", O_RDONLY)) < 0)
-			return (usage_nm(av[0]));
+			return (usage_otool(av[0]));
 		close(fd);
 		ft_otool("a.out");
 	}
