@@ -1,2 +1,2 @@
 # nm-otool
-nm + otool
+nm + otool on macOS
